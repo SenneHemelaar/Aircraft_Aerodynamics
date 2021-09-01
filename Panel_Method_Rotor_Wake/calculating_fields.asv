@@ -1,0 +1,29 @@
+function [abs_vel_field, u_vel_field,w_vel_field,pres_field] = calculating_fields(gamma, x_v, z_v, x_field, z_field, rho, u_0, w_0)
+
+abs_vel_field = zeros(x_grid, z_grid);
+u_vel_field = zeros(x_grid, z_grid) + u_0;
+w_vel_field = zeros(x_grid, z_grid) + w_0;
+
+pres_field = zeros(x_grid, z_grid);
+
+for i = 1:length(x_field)
+
+    for j = 1:length(z_field)
+        
+        for k =1:length(gamma)
+            
+            [u,w] = VOR2D(x_field(j),z_field(i),x_v(k),z_v(k), gamma(i));
+            
+            u_vel_field(i,j) = u_vel_field(i,j) + u;
+            w_vel_field(i,j) = w_vel_field(i,j) + w;
+        end
+        
+        abs_vel_field(i,j) = (u_vel_field(i,j)^2+w_vel_field(i,j)^2)^0.5;
+        pres_field(i,j) = (0.5*rho*(u_0^2+w_0^2) -0.5*rho*abs_vel_field(i,j)^2)/(0.5*rho*(u_0^2+w_0^2)) ;
+    end 
+end 
+end 
+
+
+
+    

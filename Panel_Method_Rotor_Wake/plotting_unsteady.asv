@@ -1,0 +1,94 @@
+%% Plotting Unsteady
+
+% figure(5)
+% plot(v_g.x_c,Dp)
+% xlabel('x/c');
+% ylabel('\Delta C_p');
+
+figure(8)
+plot(alpha_list(N-time_period:N-1), period_lift)
+xlabel('\alpha')
+ylabel('C_L')
+grid on;
+
+%error figure, should be fixed
+figure
+semilogx(ceil(1:N/time_period), error_list)
+xlabel('N')
+ylabel('error')
+grid on;
+
+
+figure
+loglog(ceil(1:N/time_period), error_list)
+xlabel('N')
+ylabel('error')
+grid on;
+
+%% logic to find the right indices for the angles of attack
+converged_alphas = alpha_list(end-time_period:end);
+[max_alpha, idx_max_alpha] = max(converged_alphas);
+[min_alpha, idx_min_alpha] = min(converged_alphas);
+
+% max_alpha_idx_wr_end = -time_period+idx_max_alpha;
+% min_alpha_idx_wr_end = -time_period+idx_min_alpha;
+
+len = length(converged_alphas);
+low_bound_idx = idx_min_alpha  - len/4;
+high_bound_idx = idx_max_alpha  - len/4;
+
+low_bound_alpha = alpha_list(end+low_bound_idx);
+high_bound_alpha = alpha_list(end+high_bound_idx);
+
+indices = [idx_max_alpha, idx_min_alpha, high_bound_idx, low_bound_idx];
+aoa_s = [max_alpha, min_alpha, high_bound_alpha, low_bound_alpha];
+
+%% heat plot
+for i=1:4
+    index = indices(i);
+    aoa = aoa_s(i);
+    if i <3
+        if i==1
+        figure(6)
+        end
+        j = i;
+    else
+        if i == 3
+            figure(7)
+        end
+        j = i-2;
+    end
+    
+    vel = squeeze(abs_vel_field(:,:,end+index));
+    pres = squeeze(pres_field(:,:,end+index));
+    ax1 = subplot(2,2,j);
+    cMap=jet(256); %set the colomap using the "jet" scale
+    [cb,h]=contourf(x_field,z_field,vel);
+    set(h, 'edgecolor','none');
+    colormap(cMap);
+    caxis([0 20])
+    cb=colorbar;
+    cb.Label.String = 'velocity [m/s]';
+    xlabel('x');
+    ylabel('z');
+    title(append('\alpha = ', string(rad2deg(aoa))))
+    hold on;
+    plot(v_g.x, v_g.z,'-b');
+    box on;
+
+    ax2 = subplot(2,2,2+j);
+    cMap=jet(256); %set the colomap using the "jet" scale
+    [cb,h]=contourf(x_field,z_field,pres);
+    set(h, 'edgecolor','none');
+    colormap(cMap);
+    caxis([-4 1])
+    cb=colorbar;
+    cb.Label.String = '\Delta C_P';
+    xlabel('x');
+    ylabel('z');
+    title(append('\alpha = ', string(rad2deg(aoa))))
+    hold on;
+    plot(v_g.x, v_g.z, '-b');
+    box on;
+end
+
