@@ -21,7 +21,7 @@ ylabel('C_L');
 xlim([-10 20]);
 legend('Panel Method: Thin Airfoil with 2% camber, max camber at 0.2*x/c', 'XFoil Data: NACA 2205','Location','Best')
 grid on; 
-saveas(cl_aoa, 'figures/steady_CL_vs_aoa.png');
+% saveas(cl_aoa, 'figures/steady_CL_vs_aoa.png');
 
 figure(3)
 cMap=jet(256); %set the colomap using the "jet" scale
