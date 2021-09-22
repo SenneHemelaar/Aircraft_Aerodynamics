@@ -7,9 +7,9 @@ clear;clc;close;
 steady = true;
 
 % Geometry Settings & Build
-n_panels = 30;                                          % number of panels
+n_panels = 9;                                          % number of panels
 chord = 1;                                              % mean aerodynamic chord (MAC)                                      
-camber = 0.02;                                          % max camber, to model zero camber set to zero
+camber = 0.00;                                          % max camber, to model zero camber set to zero
 location_max_camber = 0.2;                              % location max camber, no need to set to zero when no camber is applied. 
 v_g = build_vorticity_geometry(chord, n_panels, camber, location_max_camber);
 
@@ -22,7 +22,7 @@ rho = 1.225;                                            % air density
 if steady   
     % Steady Flow paramaters
     alpha_max = deg2rad(20);                            % maximum angle of attack [rad]
-    alpha_min = deg2rad(-10);                            % minimum angle of attack [rad]
+    alpha_min = deg2rad(-10);                           % minimum angle of attack [rad]
     n_alpha = 30;                                       % number of angles of attack to evaluate
     alphas = linspace(alpha_min, alpha_max, n_alpha);  	% list of angles of attack
     alphas_deg = rad2deg(alphas);                     	% list of aoa's in deg. NOTHING IS DONE WITH THESE VALUES, ONLY DISPLAYING FOR OVERVIEW CALCULATED ANGLES

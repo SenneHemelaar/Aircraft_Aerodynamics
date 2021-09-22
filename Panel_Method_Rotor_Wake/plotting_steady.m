@@ -11,8 +11,8 @@ hold on;
 
 
 
-A = readtable('naca2205_aseq_-6_90_6.txt');
-cl_aoa = figure(2)
+A = readtable('naca2205_aseq_-6_90_6B.txt');
+cl_aoa = figure(2);
 plot(alphas_deg, CL,'-x');
 hold on;
 plot(A{:,1},A{:,2});
