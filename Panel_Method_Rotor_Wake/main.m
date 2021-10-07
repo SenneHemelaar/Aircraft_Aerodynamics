@@ -7,7 +7,7 @@ clear;clc;close;
 steady = true;
 
 % Geometry Settings & Build
-n_panels = 9;                                          % number of panels
+n_panels = 10;                                          % number of panels
 chord = 1;                                              % mean aerodynamic chord (MAC)                                      
 camber = 0.02;                                          % max camber, to model zero camber set to zero
 location_max_camber = 0.2;                              % location max camber, no need to set to zero when no camber is applied. 
@@ -68,5 +68,10 @@ else
         plotting_steady;
     end
 end
+
+figure(5)
+plot(v_g.x,v_g.z)
+hold on
+plot(v_g.x_n,v_g.z_n,'o')
 
 
