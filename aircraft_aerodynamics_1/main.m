@@ -5,11 +5,11 @@
 clc; clear all; close all
 
 %% Configurable parameters
-n_panels = 15;
-NACA = '0008';      % Choose desired 4 digit NACA airfoil NACA'INPUT'
-U_inf = 1;
-plot_limit = [-0.2 1.2 -0.5 0.5]; %x min x max y min y max
-grid_density = 10;             %number of grid points on nxn matrix
+n_panels = 40;
+NACA = '0016';      % Choose desired 4 digit NACA airfoil NACA'INPUT'
+U_inf = 5;
+plot_limit = [-2 2 -2.5 2.5]; %x min x max y min y max
+grid_density = 100;             %number of grid points on nxn matrix
 rho = 1.23;          % [kg/m^3] density air
 
 

@@ -25,7 +25,7 @@ for i = 1:iaf.n
     VP_zU(i)  = - (0.75*dist_rU(i)*sin(angle(i))) + af_geo.zU(i);
     
     % Normal vectors upper side
-    N_xU(i)   =   sin(angle(i));
+    N_xU(i)   =   -sin(angle(i));
     N_zU(i)   =   cos(angle(i));
     
     dist_x(i) =   af_geo.xL(i) - af_geo.xL(i+1);
@@ -43,7 +43,7 @@ for i = 1:iaf.n
     
     % normal vectors lower side
     N_xL(i)   =   sin(angle(i));
-    N_zL(i)   =   cos(angle(i));
+    N_zL(i)   =   -cos(angle(i));
 end
 
 % Add to struct

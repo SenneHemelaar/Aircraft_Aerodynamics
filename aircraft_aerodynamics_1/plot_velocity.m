@@ -5,7 +5,7 @@ z_grid = linspace(plot_limit(3),plot_limit(4),grid_density);
 
 figure(1)
 hold on
-contourf(x_grid,z_grid,vabs)
+contourf(x_grid,z_grid,vabs')
 
 
 plot(af_geo.xU,af_geo.zU,'bo-')

@@ -30,3 +30,4 @@ gamma=linsolve(a,RHSt);
 
 end
 
+a=6;
