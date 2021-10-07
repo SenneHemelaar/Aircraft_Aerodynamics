@@ -1,4 +1,4 @@
-function [Gamma,u] = find_circulation(af_geo,n_panels,U_inf)
+function [Gamma] = find_circulation(af_geo,n_panels,U_inf)
 
 Gamma = zeros(2*n_panels);
 

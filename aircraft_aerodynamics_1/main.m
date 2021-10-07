@@ -24,7 +24,7 @@ plot(af_geo.VP_xL,af_geo.VP_zL,'ro')
 plot(af_geo.xC,af_geo.zC,'k--')
 
 %% Find cirulation gamma
-[gamma, u] = find_circulation(af_geo,n_panels,U_inf);
+[gamma] = find_circulation(af_geo,n_panels,U_inf);
 
 %% Plotting the results 
 
