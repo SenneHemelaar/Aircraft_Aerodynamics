@@ -16,7 +16,6 @@ grid_density = 100;             %number of grid points on nxn matrix
 af_geo = generate_geometry(n_panels,NACA);  % af_geo stands for airfoil geometry
 
 %Test-plot to check geometry
-<<<<<<< Updated upstream
 plot(af_geo.xU,af_geo.zU,'bo-')
 hold on
 plot(af_geo.xL,af_geo.zL,'bo-')
@@ -28,16 +27,12 @@ plot(af_geo.VP_xL,af_geo.VP_zL,'ro')
 plot(af_geo.xC,af_geo.zC,'k--')
 
 %% Find cirulation gamma
-[gamma] = find_circulation(af_geo,n_panels,U_inf);
-
+gamma = find_circulation(af_geo,n_panels,U_inf);
 
 %% Calculating forces
-
 [vx,vz] = v_distribution(U_inf,grid_density,plot_limit,gamma,n_panel);
 L = loads(U_inf,gamma,rho,af_geo);
 
-
 %% Plotting the results 
-
 plot_velocity(vx,vz,grid_density);
 

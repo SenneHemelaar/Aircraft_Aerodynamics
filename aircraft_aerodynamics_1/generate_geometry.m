@@ -21,8 +21,8 @@ for i = 1:iaf.n
     CP_zU(i)  = - (0.25*dist_rU(i)*sin(angle(i))) + af_geo.zU(i);
 
     % Vortex elements upper side
-    VP_xU(i)  = - (0.75*dist_r(i)*cos(angle(i))) + af_geo.xU(i);
-    VP_zU(i)  = - (0.75*dist_r(i)*sin(angle(i))) + af_geo.zU(i);
+    VP_xU(i)  = - (0.75*dist_rU(i)*cos(angle(i))) + af_geo.xU(i);
+    VP_zU(i)  = - (0.75*dist_rU(i)*sin(angle(i))) + af_geo.zU(i);
     
     % Normal vectors upper side
     N_xU(i)   =   sin(angle(i));
@@ -52,6 +52,7 @@ af_geo.CP_xU = CP_xU; af_geo.CP_zU = CP_zU;
 af_geo.VP_xL = VP_xL; af_geo.VP_zL = VP_zL;
 af_geo.VP_xU = VP_xU; af_geo.VP_zU = VP_zU;
 af_geo.N_xU  =  N_xU; af_geo.N_zU  =  N_zU;
+af_geo.N_xL  =  N_xL; af_geo.N_zL  =  N_zL;
 af_geo.a_U   = dist_rU; af_geo.a_L = dist_rL;
 
 
