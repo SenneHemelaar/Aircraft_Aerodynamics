@@ -1,0 +1,9 @@
+function [] = vortex_panel_method()
+
+% Build output arrays
+gamma = zeros(n_panels);
+
+gamma = find_circulation(af_geo);
+
+end
+

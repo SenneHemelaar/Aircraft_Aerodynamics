@@ -9,7 +9,7 @@ steady = true;
 % Geometry Settings & Build
 n_panels = 9;                                          % number of panels
 chord = 1;                                              % mean aerodynamic chord (MAC)                                      
-camber = 0.00;                                          % max camber, to model zero camber set to zero
+camber = 0.02;                                          % max camber, to model zero camber set to zero
 location_max_camber = 0.2;                              % location max camber, no need to set to zero when no camber is applied. 
 v_g = build_vorticity_geometry(chord, n_panels, camber, location_max_camber);
 
