@@ -10,7 +10,7 @@ NACA = '0016';      % Choose desired 4 digit NACA airfoil NACA'INPUT'
 U_inf = 10;
 
 %% Generate Geometry 
-[af_geo, angle] = generate_geometry(n_panels,NACA);  % af_geo stands for airfoil geometry
+af_geo = generate_geometry(n_panels,NACA);  % af_geo stands for airfoil geometry
 
 %Test-plot to check geometry
 plot(af_geo.xU,af_geo.zU,'bo-')

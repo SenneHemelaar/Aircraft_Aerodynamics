@@ -1,4 +1,4 @@
-function [af_geo, angle] =  generate_geometry(n_panels,NACA)
+function af_geo =  generate_geometry(n_panels,NACA)
 
 iaf.designation=NACA;           % Choose desired NACA airfoil
 iaf.n=n_panels;                 % Amount of panels
