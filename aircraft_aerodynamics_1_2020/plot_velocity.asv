@@ -1,0 +1,17 @@
+function plot_velocity(v_field, grid_density, plot_limit, af_geo)
+%PLOT_VELOCITY Summary of this function goes here
+%   Detailed explanation goes here
+x_grid = linspace(plot_limit(1),plot_limit(2),grid_density);
+z_grid = linspace(plot_limit(3),plot_limit(4),grid_density);
+
+figure(1)
+hold on
+cMap=jet(256);
+[cb,h] = contourf(x_grid,z_grid,v_field.vabs');
+set(h, 'edgecolor','none');
+colormap(cMap);
+cb=colorbar;
+plot(af_geo.x, af_geo.z, 'bo-')
+
+end
+

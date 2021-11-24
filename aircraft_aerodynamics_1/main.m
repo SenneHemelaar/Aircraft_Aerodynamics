@@ -5,10 +5,10 @@
 clc; clear all; close all
 
 %% Configurable parameters
-n_panels = 40;
+n_panels = 49;
 NACA = '0016';      % Choose desired 4 digit NACA airfoil NACA'INPUT'
 U_inf = 5;
-plot_limit = [-2 2 -2.5 2.5]; %x min x max y min y max
+plot_limit = [-1 2 -1 1]; %x min x max y min y max
 grid_density = 100;             %number of grid points on nxn matrix
 rho = 1.23;          % [kg/m^3] density air
 
@@ -29,7 +29,7 @@ plot(af_geo.VP_xL,af_geo.VP_zL,'ro')
 plot(af_geo.xC,af_geo.zC,'k--')
 
 %% Find cirulation gamma
-gamma = find_circulation(af_geo,n_panels,U_inf);
+[gamma,a] = find_circulation(af_geo,n_panels,U_inf);
 
 %% Calculating forces
 [vx,vz,vabs] = v_distribution(U_inf,grid_density,plot_limit,gamma,af_geo);

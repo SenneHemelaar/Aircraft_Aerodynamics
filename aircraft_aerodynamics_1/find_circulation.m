@@ -1,6 +1,6 @@
-function [Gamma] = find_circulation(af_geo,n_panels,U_inf)
+function [Gamma,a] = find_circulation(af_geo,n_panels,U_inf)
 
-Gamma = zeros(2*n_panels);
+Gamma = zeros(1,2*n_panels);
 
 % Control Points
 CP_xL = af_geo.CP_xL; CP_zL = af_geo.CP_zL;
@@ -28,10 +28,14 @@ for i=1:2*n_panels        % Loop over control points
         [u(i,j),w(i,j)]= VOR2D(1,CP_x(i),CP_z(i),VP_x(j),VP_z(j));
         a(i,j)=u(i,j)*N_x(i)+w(i,j)*N_z(i);
     end
-    RHS(i)=-(U_inf*N_x(i)+U_inf*N_z(i));
+    if i<=n_panels
+        RHS(i)=-(U_inf*N_x(i)+U_inf*N_z(i));
+    else
+        RHS(i)=-(U_inf*N_x(i)-U_inf*N_z(i));
+    end
 end
 
-Gamma=linsolve(a,RHS'); 
+Gamma=-linsolve(a,RHS'); 
 
 end
 

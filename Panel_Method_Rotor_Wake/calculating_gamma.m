@@ -1,4 +1,4 @@
-function [gamma] = calculating_gamma(v_g,N,U_inf,W_inf,n_x,n_z)
+function [gamma] = calculating_gamma(v_g, N, U_inf, W_inf, n_x, n_z)
 
 x_c = v_g.x_c;
 z_c = v_g.z_c;

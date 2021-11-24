@@ -21,8 +21,8 @@ rho = 1.225;                                            % air density
 
 if steady   
     % Steady Flow paramaters
-    alpha_max = deg2rad(20);                            % maximum angle of attack [rad]
-    alpha_min = deg2rad(-10);                           % minimum angle of attack [rad]
+    alpha_max = deg2rad(0);                            % maximum angle of attack [rad]
+    alpha_min = deg2rad(0);                           % minimum angle of attack [rad]
     n_alpha = 30;                                       % number of angles of attack to evaluate
     alphas = linspace(alpha_min, alpha_max, n_alpha);  	% list of angles of attack
     alphas_deg = rad2deg(alphas);                     	% list of aoa's in deg. NOTHING IS DONE WITH THESE VALUES, ONLY DISPLAYING FOR OVERVIEW CALCULATED ANGLES
