@@ -12,9 +12,10 @@ set(h, 'edgecolor','none');
 colormap(cMap);
 cb=colorbar;
 cb.Label.String = 'velocity [m/s]';
-xlabel('x');
-ylabel('z');
-plot(af_geo.x, af_geo.z, 'k-')
+xlabel('$x$','Interpreter','latex');
+ylabel('$z$','Interpreter','latex');
+plot(af_geo.x, af_geo.z,'k-','LineWidth',2)
+set(gcf,'position',[950,300,600,450])
 
 end
 

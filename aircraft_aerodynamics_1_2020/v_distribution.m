@@ -1,4 +1,5 @@
-function [fields] = v_distribution(grid_density, plot_limit, gamma, af_geo, u_0, w_0, rho)
+function [fields] = v_distribution(grid_density, plot_limit, gamma,...
+                                   af_geo, u_0, w_0, rho)
 %V_DISTRIBUTION Calculates the v_field field
 
 %constructing grid on plot area
@@ -19,7 +20,8 @@ for i = 1:grid_density
             vz(i,j) = vz(i,j) + w;
         end
         vabs(i,j) = sqrt(vx(i,j).^2 + vz(i,j).^2);
-        p(i,j) = (0.5*rho*(u_0^2+w_0^2) -0.5*rho*vabs(i,j)^2)/(0.5*rho*(u_0^2+w_0^2)) ;
+        p(i,j) = (0.5*rho*(u_0^2+w_0^2) -0.5*rho*vabs(i,j)^2)/...
+                 (0.5*rho*(u_0^2+w_0^2)) ;
 
     end   
 end
