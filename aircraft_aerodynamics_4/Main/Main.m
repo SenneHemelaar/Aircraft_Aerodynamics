@@ -9,8 +9,12 @@ f = 1;
 avl_file = strcat('GEOMETRY_',string(f));
 
 %%%====================CREATE AVL GEOMETRY FILE=========================%%%
+phiw_list = linspace(0,90,91);
+
+for i = 1:length(phiw_list)
+phiw = phiw_list(i);
 writeAVL(avl_file, 1.68, 1.6, 0.4, 0,...
-         0, deg2rad(30), deg2rad(90), 105, 3.75,...
+         0, deg2rad(30), deg2rad(phiw), 105, 3.75,...
          28,  10,  22,   8,  22)
 %--------avl_file, lw, cwr, lamw, epsr,...
 %--------epst, Lamw, phiw, Sref, cref,...
@@ -21,4 +25,19 @@ runAVL(avl_file, 0.6601, 0.7)
 %------avlfile, rho, Mach
 
 %%%===================EXTRACT FORCES FROM RESULTS=======================%%%
-Forces = forces(avl_file);
+Forces{i} = forces(avl_file);
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
