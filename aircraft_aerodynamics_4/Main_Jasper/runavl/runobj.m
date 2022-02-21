@@ -26,5 +26,5 @@ q = 16193;
 k = 0.5;
 J0 = 3.826932635843151e+06;
 J = optimization_function(Forces, q, k);
-J = J/J0
+J = J/J0;
 end

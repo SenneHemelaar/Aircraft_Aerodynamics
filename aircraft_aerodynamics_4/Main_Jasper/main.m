@@ -14,7 +14,7 @@ ub = [2.6, deg2rad(90), 2.0, 1.0, deg2rad(45), deg2rad(6) , deg2rad(+10)];
 
 %%%===========================DesignVector==============================%%%
 
-x0 = [1.58, 50, 1.4, 0.7,22.5, 0, 0];
+x0 = [1.58, deg2rad(50), 1.4, 0.7,deg2rad(22.5), 0, 0];
 
 %%%==============================Options================================%%%
 
@@ -28,6 +28,7 @@ options.PlotFcns        = {@optimplotx, ...                 % Plot functions
                            @optimplotfirstorderopt, ...
                            @optimplotstepsize, ...
                            @optimplotfunccount};
+options.DiffMinChange   = 0.01;
                        
 %%%=========================RunOptimisation=============================%%%
 tic
