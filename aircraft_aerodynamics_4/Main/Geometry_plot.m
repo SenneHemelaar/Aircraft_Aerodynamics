@@ -33,7 +33,7 @@ Z_winglet{i} = [0,...
 end
 
 figure(1)
-hold on;
+hold on; grid on;
 view(3)
 patch(X_wing,Y_wing,Z_wing,'black')
 patch(X_wing,Y_wing,Z_wing,'black')
