@@ -10,7 +10,11 @@ end
 
 figure(1)
 hold on; grid on; box on
-plot(phiw_list,Forces_list,'k')
-xlabel('$\phi_w$','Interpreter','latex')
-ylabel('$C_D$','Interpreter','latex')
+plot(phiw_list,Forces_list,'k','LineWidth',1.5)
+xlabel('$\phi_w $ [deg]','Interpreter','latex','FontSize',16)
+ylabel('${C_D}_i$','Interpreter','latex','FontSize',15)
 set(gcf,'position',[300,300,950,450])
+ylh = get(gca,'ylabel');
+gyl = get(ylh);                                                         % Object Information
+ylp = get(ylh, 'Position');
+set(ylh, 'Rotation',0, 'Position',ylp, 'VerticalAlignment','middle', 'HorizontalAlignment','right')
