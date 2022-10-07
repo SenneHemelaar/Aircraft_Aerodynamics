@@ -1,4 +1,4 @@
-function J = runobj(x)
+function [J,Forces] = runobj(x)
 
 %%%====================SELECT AVL GEOMETRY FILE=========================%%%
 f = 1;
