@@ -1,0 +1,128 @@
+# Win32 version
+# Makefile for Vortex lattice programs
+
+BINDIR = .
+
+SRC = ..\src
+
+PROGS = avl
+AOBJS = avl.obj aoper.obj amode.obj amass.obj asetup.obj \
+amake.obj ainput.obj aoutput.obj aero.obj atrim.obj atpforc.obj \
+aic.obj cdcl.obj airutil.obj autil.obj \
+aplotvl.obj aplottp.obj aplotmd.obj limits.obj \
+pltops.obj hidden.obj \
+plsubs.obj \
+userio.obj plutil.obj getvm.obj \
+matrix.obj spline.obj sgutil.obj
+
+PLTOBJ = ..\plotlib\libPlt.lib
+#EIGOBJ = ..\eispack\eispack.obj
+##EIGOBJ = eispack.obj
+
+###================================================
+# Intel fortran
+FC = ifort
+DP = /real_size:64
+FFLAGS = $(DP) /Oxp /thread
+FFLOPT = $(DP) /Oxp /thread
+
+#Use this for quickwin programs 
+LFLAGS = /libs:qwin /threads 
+#Use this for console (DOS window) programs 
+#LFLAGS = /threads
+
+#FFLAGS  = /O2 $(DP) /W0 /MT /4Yportlib /G6
+#FLGOPT  = /O3 $(DP) /W0 /MT /4Yportlib /G6 /QaxW 
+#LFLAGS  = /MT /link /NODEFAULTLIB:LIBC.LIB
+
+LIBS = gdi32.lib user32.lib /LINK /NODEFAULTLIB:LIBC.LIB
+
+INSTALLCMD = install -s
+
+###  Plot libraries and link libs
+
+PLTOBJ = Z:\guppy\WinXP\Lib\libPltDP.lib
+PLTLIB = 
+
+##--------------------------
+### double-precision option (also need double precision Eispack and libPlt)
+#FFLAGS = -O $(DP) 
+#PLTOBJ = ..\plotlib\libPltDP.a 
+
+
+
+all:	 $(PROGS)
+
+install: $(PROGS)
+	$(INSTALLCMD) $(PROGS) $(BINDIR)
+
+clean: 
+	del $(PROGS)
+	del *.obj
+
+$(SRC)\AVL.INC: $(SRC)\AINDEX.INC
+	touch $(SRC)\AVL.INC
+
+avl: $(AOBJS)
+	$(FC) /exe:avl.exe $(LFLAGS) $(AOBJS)  $(ALIBS) $(PLTOBJ) $(EIGOBJ) $(PLTLIB) $(LIBS)
+
+
+avl.obj: $(SRC)\avl.f $(SRC)\AVL.INC $(SRC)\AVLPLT.INC
+	$(FC) /c $(FFLAGS) $(SRC)\avl.f
+aoper.obj: $(SRC)\aoper.f $(SRC)\AVL.INC $(SRC)\AVLPLT.INC
+	$(FC) /c $(FFLAGS) $(SRC)\aoper.f
+amode.obj: $(SRC)\amode.f $(SRC)\AVL.INC $(SRC)\AVLPLT.INC
+	$(FC) /c $(FFLAGS) $(SRC)\amode.f
+amass.obj: $(SRC)\amass.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\amass.f
+asetup.obj: $(SRC)\asetup.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\asetup.f
+cdcl.obj: $(SRC)\cdcl.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS)  $(SRC)\cdcl.f
+amake.obj: $(SRC)\amake.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\amake.f
+ainput.obj: $(SRC)\ainput.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\ainput.f
+aoutput.obj: $(SRC)/aoutput.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\aoutput.f
+aero.obj: $(SRC)\aero.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\aero.f
+getvm.obj: $(SRC)\getvm.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\getvm.f
+atrim.obj: $(SRC)\atrim.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\atrim.f
+atpforc.obj: $(SRC)\atpforc.f $(SRC)\AVL.INC
+	$(FC) /c $(FFLAGS) $(SRC)\atpforc.f
+aplotvl.obj: $(SRC)\aplotvl.f $(SRC)\AVL.INC $(SRC)\AVLPLT.INC $(SRC)\MASKS.INC
+	$(FC) /c $(FFLAGS) $(SRC)\aplotvl.f
+aplottp.obj: $(SRC)\aplottp.f $(SRC)\AVL.INC $(SRC)\AVLPLT.INC $(SRC)\MASKS.INC
+	$(FC) /c $(FFLAGS) $(SRC)\aplottp.f
+aplotmd.obj: $(SRC)\aplotmd.f $(SRC)\AVL.INC $(SRC)\AVLPLT.INC $(SRC)\MASKS.INC
+	$(FC) /c $(FFLAGS) $(SRC)\aplotmd.f
+limits.obj: $(SRC)\limits.f $(SRC)\AVL.INC $(SRC)\AVLPLT.INC
+	$(FC) /c $(FFLAGS) $(SRC)\limits.f
+pltops.obj: $(SRC)\pltops.f $(SRC)\AVLPLT.INC
+	$(FC) /c $(FFLAGS) $(SRC)\pltops.f
+plsubs.obj: $(SRC)\plsubs.f $(SRC)\AINDEX.INC
+	$(FC) /c $(FFLAGS) $(SRC)\plsubs.f
+hidden.obj: $(SRC)\hidden.f
+	$(FC) /c $(FFLAGS) $(SRC)\hidden.f
+matrix.obj: $(SRC)\matrix.f
+	$(FC) /c $(FFLAGS)  $(SRC)\matrix.f
+aic.obj: $(SRC)\aic.f
+	$(FC) /c $(FFLAGS) $(SRC)\aic.f
+userio.obj: $(SRC)\userio.f
+	$(FC) /c $(FFLAGS) $(SRC)\userio.f
+plutil.obj: $(SRC)\plutil.f $(SRC)\MASKS.INC
+	$(FC) /c $(FFLAGS) $(SRC)\plutil.f
+
+spline.obj: $(SRC)\spline.f
+	$(FC) /c $(FFLAGS)  $(SRC)\spline.f
+sgutil.obj: $(SRC)\sgutil.f
+	$(FC) /c $(FFLAGS)  $(SRC)\sgutil.f
+airutil.obj: $(SRC)\airutil.f
+	$(FC) /c $(FFLAGS)  $(SRC)\airutil.f
+autil.obj: $(SRC)\autil.f
+	$(FC) /c $(FFLAGS)  $(SRC)\autil.f
+
+

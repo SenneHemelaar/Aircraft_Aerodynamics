@@ -1,4 +1,4 @@
-function [ forces ] = forces(filename)
+function [ forces ] = forces(filename, winglet)
 
 avlfile = strcat(filename,'.forces');
 file = textread(avlfile, '%s', 'delimiter', '\n','whitespace', '');
@@ -11,8 +11,10 @@ forces.CDff = str2double(line{16});
 
 forces.strip1 = importdata(avlfile,' ',72);
 forces.strip1 = forces.strip1.data;
-% try
-forces.strip2 = importdata(avlfile, ' ',102+2*size(forces.strip1,1));
-forces.strip2 = forces.strip2.data;
-% end
+
+if winglet
+    forces.strip2 = importdata(avlfile, ' ',102+2*size(forces.strip1,1));
+    forces.strip2 = forces.strip2.data;
+end
+
 end

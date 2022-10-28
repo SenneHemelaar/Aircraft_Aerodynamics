@@ -23,11 +23,11 @@ addpath(genpath('runavl'))
 % Nsw     : No. of Spanwise Sections Winglet        [-]
 
 %%%=============================INPUTS==================================%%%
-lw_lb   = 0.02;  lw_ub   = 0.1;    lw_0   = 0.02;
-phiw_lb = 10;    phiw_ub = 90;     phiw_0 = 10;
-cwr_lb  = 0.4;   cwr_ub  = 1.0;    cwr_0  = 0.4;
+lw_lb   = 0.02;  lw_ub   = 0.1;    lw_0   = 0.06;
+phiw_lb = 10;    phiw_ub = 90;     phiw_0 = 45;
+cwr_lb  = 0.4;   cwr_ub  = 1.0;    cwr_0  = 0.8;
 lam_lb  = 0.4;   lam_ub  = 1.0;    lam_0  = 0.4;
-Lam_lb  = 0;     Lam_ub  = 45;     Lam_0  = 0;
+Lam_lb  = 0;     Lam_ub  = 45;     Lam_0  = 30;
 epsR_lb = -6;    epsR_ub = 10;     epsR_0 = 0;
 epsT_lb = -10;   epsT_ub = 6;      epsT_0 = 0;
 cR      = 5.5;
@@ -49,17 +49,18 @@ ub = [lw_ub, phiw_ub, cwr_ub, lam_ub, Lam_ub, epsR_ub, epsT_ub];
 %%%===========================DesignVector==============================%%%
 x0 = [lw_0,  phiw_0,  cwr_0,  lam_0,  Lam_0,  epsR_0,  epsT_0];
 
+
 %%%==============================Options================================%%%
 options.Display         = 'iter-detailed';
 options.Algorithm       = 'sqp';
 options.FunValCheck     = 'off';
 options.Diagnostics     = 'on';
-% options.PlotFcns        = {@optimplotx, ...                 % Plot functions
-%                            @optimplotfval, ...
-%                            @optimplotconstrviolation, ... 
-%                            @optimplotfirstorderopt, ...
-%                            @optimplotstepsize, ...
-%                            @optimplotfunccount};
+options.PlotFcns        = {@optimplotx, ...                 % Plot functions
+                           @optimplotfval, ...
+                           @optimplotconstrviolation, ... 
+                           @optimplotfirstorderopt, ...
+                           @optimplotstepsize, ...
+                           @optimplotfunccount};
 options.DiffMinChange   = 0.01;
                        
 %%%=========================RunOptimisation=============================%%%
@@ -72,6 +73,7 @@ toc
 % k_05= load('x_vector_k_0.5.mat'); k_05= k_05.x;
 % k_1 = load('x_vector_k_1.mat');   k_1 = k_1.x;
 
+%% 
 
-
+Geometry_plot_J(x)
 

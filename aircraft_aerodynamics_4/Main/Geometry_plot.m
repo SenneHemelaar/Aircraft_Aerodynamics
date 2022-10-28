@@ -23,7 +23,7 @@ clear; close all;
 %%%=============================INPUTS==================================%%%
 lw        = 0.0992;
 Lam       = 8.2046;
-phiw      = 90;
+phiw      = 0;
 cwr       = 0.9072;
 lam       = 0.5307;
 epsR      = 0;
@@ -31,10 +31,10 @@ epsT      = 0;
 cR        = 5.5;
 cT        = 2.0;
 L         = 14;
-NC1       = 20;
-NC2       = 20;
-NS1       = 20;
-NS2       = 20;
+NC1       = 10;
+NC2       = 8;
+NS1       = 22;
+NS2       = 22;
 
 color_string = {'#2B3A67'; '#5C6D70'; '#A37774'; '#E88873'; '#E0AC9D';...
                 '#2B3A67'; '#5C6D70'; '#A37774'; '#E88873'; '#E0AC9D';...
@@ -48,19 +48,19 @@ color_string = {'#2B3A67'; '#5C6D70'; '#A37774'; '#E88873'; '#E0AC9D';...
 
 %%%============================PLOTTING=================================%%%
 figure(1)
-view(300,15)
+view(300,30)
 hold on; grid on;
 axis equal
 mesh(X_wing,Y_wing,Z_wing,'FaceAlpha',1.0,'EdgeColor','black',...
-    'FaceColor','#C490D1','LineWidth',0.75);
+    'FaceColor',[1 0 1],'LineWidth',0.75);
 % mesh(X_wing,-Y_wing,Z_wing,'FaceAlpha',1.0,'EdgeColor','black',...
 %     'FaceColor','#C490D1','LineWidth',0.75);
 mesh(X_winglet,Y_winglet,Z_winglet,'FaceAlpha',1.0,'EdgeColor',...
-    'black','FaceColor','#C490D1','LineWidth',0.75);
+    'black','FaceColor',[1 0 1],'LineWidth',0.75);
 % mesh(X_winglet,-Y_winglet,Z_winglet,'FaceAlpha',1.0,'EdgeColor',...
 %     'black','FaceColor','#C490D1','LineWidth',0.75);
 xlabel('$X$ [m]','interpreter','latex');
-ylim([10 16]); xlim([2 6.5]);zlim([0 0.2])
+ylim([0 16]); xlim([0 6.5]);zlim([0 lw*b])
 ylabel('$Y$ [m]','interpreter','latex');
 zlabel('$Z$ [m]','interpreter','latex');
 set(gcf,'position',[100,100,1500,750])

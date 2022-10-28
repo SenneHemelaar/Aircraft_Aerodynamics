@@ -8,14 +8,17 @@ addpath(genpath('runavl'))
 
 blue = [114 147 203]./255;
 red = [211 94 96]./255;
-steps = 10;
+steps = 50;
 
 rho = 0.6601;
 a = 316.5;
 mach = 0.7;
 
 q = 0.5*(a*mach)^2*rho;
-k = 0;
+k = 0.5;
+
+%%
+
 % Phi sweep
 %%%===========================DesignVector==============================%%%
 %     l_w , phi        ,C_w_r   ,lambda_w, Lambda       , e_w_r, e_w_t 
@@ -38,8 +41,8 @@ phi.x = zeros(1, steps);
 
 for i = 1:steps
     x(param_num) = param(i);
-    [~,forces] = runobj(x);
-    phi.M(i) = optimization_function(forces, q, k)/1e6;
+    [~,forces,phi.M(i)] = runobj(x);
+    phi.M(i) = phi.M(i)/1e6;
     phi.CDind(i) = forces.CDind;
     phi.CDff(i) = forces.CDff;
     phi.x(i) = param(i);
@@ -108,7 +111,7 @@ grid on
 
 plot(rad2deg(phi.x),phi.CDind, 'Color', blue, 'LineWidth', 2)
 
-ylim([min(phi.CDind)*0.95 max(phi.CDind)*1.05])
+ylim([min(phi.CDind)*0.98 max(phi.CDind)*1.02])
 xlim([min(rad2deg(phi.x)) max(rad2deg(phi.x))])
 
 ylabel('Induced drag C_{D_i} [-]')
@@ -121,7 +124,7 @@ grid on
 plot(l_w.x,l_w.CDind,'Color', blue, 'LineWidth', 2)
 plot(tip_ext.x,tip_ext.CDind, 'Color', red, 'LineWidth', 2)
 
-ylim([min(min(l_w.CDind,tip_ext.CDind))*0.95 ,max(max(phi.CDind,tip_ext.CDind))*1.05])
+ylim([min(min(l_w.CDind,tip_ext.CDind))*0.98 ,max(max(phi.CDind,tip_ext.CDind))*1.02])
 xlim([min(l_w.x) max(l_w.x)])
 
 ylabel('Induced drag C_{D_i} [-]')
@@ -134,7 +137,7 @@ grid on
 hold on 
 plot(rad2deg(phi.x),phi.M, 'Color', blue, 'LineWidth', 2)
 
-ylim([min(phi.M)*0.95 max(phi.M)*1.05])
+ylim([min(phi.M)*0.98 max(phi.M)*1.02])
 xlim([min(rad2deg(phi.x)) max(rad2deg(phi.x))])
 
 ylabel('Root bending moment [MNm]')

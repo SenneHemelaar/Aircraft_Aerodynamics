@@ -1,0 +1,33 @@
+
+Example session to make animated GIF from AVL eigenmode plots, for B737 case, 
+using ImageMagick "convert" command
+
+1) Create plot.ps with AVL:
+
+% avl b737
+MODE
+N
+X
+  click on topmost Dutch-Roll root, roughly at (-0.3,1.9)
+  use LRUD keys to rotate airplane for best view of Dutch Roll, e.g. Azim,Elev = -160,15
+  play mode by holding down > key, adjust scale with +/- keys as needed, reset time with 0 key
+  <space>
+G
+X
+  click on same Dutch Roll root again
+  play mode by holding down > key, for whatever length needed
+  <space>
+<Enter>
+Q
+
+2) Edit plot.ps
+Globally replace 
+ "612    0 translate   90 rotate"
+with
+ "0 0 translate 0 rotate"
+Write new file, e.g. plot2.ps or whatever
+
+3) Create animated GIF:
+
+convert -delay 4 -page 720x500 -border 4x4 plot2.ps plot2.gif
+

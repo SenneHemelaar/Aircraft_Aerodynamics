@@ -14,7 +14,7 @@ fprintf(fid, 'LOAD %s\n', strcat(avlfile,'.avl'));
 % fprintf(fid, '%i\n',   0); 
 
 %Disable Graphics
-fprintf(fid, 'PLOP\ng\n\n'); 
+fprintf(fid, 'PLOP\nG, T \nH, T\n\n'); 
 
 %Open the OPER menu
 fprintf(fid, '%s\n',   'OPER');   

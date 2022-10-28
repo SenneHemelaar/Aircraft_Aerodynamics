@@ -1,6 +1,7 @@
 LOAD GEOMETRY_1.avl
 PLOP
-g
+G, T 
+H, T
 
 OPER
 o

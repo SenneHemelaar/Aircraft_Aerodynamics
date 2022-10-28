@@ -1,4 +1,4 @@
-function [J, M] = optimization_function(Forces, q, k)
+function [J] = optimization_function(Forces, q, k)
 %OPTIMIZATION_FUNCTION
 S = [Forces.strip1(:,8);Forces.strip2(:,8)] .* [Forces.strip1(:,4); Forces.strip2(:,4)] * q;
 M = sum(S .* [Forces.strip1(:,2);Forces.strip2(:,2)]);

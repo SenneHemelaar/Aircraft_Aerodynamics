@@ -1,0 +1,44 @@
+#-------------------------------------------------
+#  N+3 Config D8-1
+#
+#  Dimensional unit and parameter data.
+#  Mass & Inertia breakdown.
+#-------------------------------------------------
+
+#  Names and scalings for units to be used for trim and eigenmode calculations.
+#  The Lunit and Munit values scale the mass, xyz, and inertia table data below.
+#  Lunit value will also scale all lengths and areas in the AVL input file.
+Lunit = 0.3048 m
+Munit = 0.4535 kg
+Tunit = 1.0    s
+
+#------------------------- 
+#  Gravity and density to be used as default values in trim setup.
+#  Must be in the units given above.
+g   = 9.81
+rho = 1.225
+
+#-------------------------
+#  Mass & Inertia breakdown.
+#  x y z  is location of item's own CG.
+#  Ixx... are item's inertias about item's own CG.
+#
+#  x,y,z system here must be exactly the same one used in the AVL input file
+#     (same orientation, same origin location, same length units)
+#
+#  mass     x     y     z       Ixx    Iyy    Izz   [ Ixy  Ixz  Iyz ]
+#
+  3000.0   8.0    0.    5.0      0       0      0         ! cockpit
+ 19420.0  62.5    0.   -1.0   5.00e6   0.10e6   5.10e6    ! wing
+ 33720.0  50.0    0.    2.0   0.72e6  18.90e6  19.60e6    ! fuselage
+   310.0  94.0    0.    0.0   0.       0.       0.        ! tailcone
+   528.0 111.0    0.    2.0   0.05e6   0.01e6   0.06e6    ! HT
+   616.0 102.0    0.    8.0   0.11e6   0.02e6   0.11e6    ! VT
+ 11386.0 104.0    0.    5.0   0.       0.       0.        ! Engines
+  4500.0  66.0    0.   -4.0   0.50e6   0.0      0.50e6    ! Main gear
+  1250.0  26.0    0.   -5.0   0.       0.       0.        ! Nose gear
+!*  0.1     1.     1.    1.     1.      1.       1.
+ 19200.0  60.0    0.   -1.0   2.70e6   0.08e6   2.78e6    ! fuel
+*  0.5     1.     1.    1.     1.      1.       1.
++  0.     14.0    0.    0.     0.      0.       0.
+ 38700.0  53.5    0.    2.0   0.68e6  11.50e6  12.20e6    ! PAX
