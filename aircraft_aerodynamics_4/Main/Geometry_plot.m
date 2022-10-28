@@ -21,7 +21,7 @@ clear; close all;
 % NS2     : No. of Spanwise Sections Winglet        [-]
 
 %%%=============================INPUTS==================================%%%
-lw        = 0.0992;
+lw        = 0.6;
 Lam       = 8.2046;
 phiw      = 90;
 cwr       = 0.9072;
@@ -60,7 +60,7 @@ mesh(X_winglet,Y_winglet,Z_winglet,'FaceAlpha',1.0,'EdgeColor',...
 % mesh(X_winglet,-Y_winglet,Z_winglet,'FaceAlpha',1.0,'EdgeColor',...
 %     'black','FaceColor','#C490D1','LineWidth',0.75);
 xlabel('$X$ [m]','interpreter','latex');
-ylim([10 16]); xlim([2 6.5]);zlim([0 0.2])
+% ylim([10 16]); xlim([2 6.5]);zlim([0 0.2])
 ylabel('$Y$ [m]','interpreter','latex');
 zlabel('$Z$ [m]','interpreter','latex');
 set(gcf,'position',[100,100,1500,750])
