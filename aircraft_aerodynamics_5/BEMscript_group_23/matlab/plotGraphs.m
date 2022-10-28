@@ -1,0 +1,179 @@
+function [plot_legends] = plotGraphs(results, C_Q, power_coefficient, TSR, yaw, circulation_dimension, plot_legends, variable_TSR, variable_yaw)
+%% Angles of incidence
+
+% for variable yaw
+if variable_yaw
+    angle_fig = figure(1);
+    f_plot1=plot(results(:,3),results(:,7:8));
+    title('Angles of incidence of the flow');
+    legend('\alpha for Yaw angle = 0','\phi for Yaw angle = 0', '\alpha for Yaw angle = 15','\phi for Yaw angle = 15', '\alpha for Yaw angle = 30', '\phi for Yaw angle = 30','Location','Best')
+    hold on;
+    saveas(angle_fig, 'angle_vs_radius_var_yaw.png');
+    xlabel('r/R');
+    ylabel('Angle');
+end
+
+%for variale TSR
+if variable_TSR
+    angle_fig = figure(1);
+    fplot=plot(results(:,3),results(:,7:8));
+    title('Angles of incidence of the flow');
+    legend('\alpha for TSR = 6','\phi for TSR = 6', '\alpha for TSR = 8','\phi for TSR = 8','\alpha for TSR = 10', '\phi for TSR = 10','Location','Best')
+    hold on;
+    xlabel('r/R');
+    ylabel('Angle');
+    saveas(angle_fig, 'angle_vs_radius_var_TSR.png');
+end
+
+
+% for variable yaw
+if variable_yaw
+    angle_fig = figure(12);
+    plot(results(:,3),C_Q);
+    title('Torque coefficient');
+    legend('C_Q for Yaw angle = 0', 'C_Q for Yaw angle = 15','C_Q for Yaw angle = 30','Location','Best')
+    hold on;
+    xlabel('r/R');
+    ylabel('C_Q');
+end
+
+%for variale TSR
+if variable_TSR
+    angle_fig = figure(12);
+    plot(results(:,3),C_Q);
+    title('Torque coefficient');
+    legend('C_Q for TSR = 6', 'C_Q for TSR = 8','C_Q for TSR = 10','Location','Best')
+    hold on;
+    xlabel('r/R');
+    ylabel('C_Q');
+end
+
+
+%% Induction Factors
+
+%for variable yaw angle
+if variable_yaw
+    induction_fig = figure(2);
+    plot1=plot(results(:,3),results(:,1:2),'-');%,'-o');
+    title('Induction factors');
+    legend('a for Yaw angle = 0','a'' for Yaw angle = 0', 'a for Yaw angle = 15','a'' for Yaw angle = 15','a for Yaw angle = 30', 'a'' for Yaw angle = 30','Location','Best')
+    saveas(induction_fig, 'induction_vs_radius_var_yaw.png');
+    xlabel('r/R');
+    ylabel('Induction Factor');
+    hold on;
+    
+end
+
+    
+%for variable TSR
+if variable_TSR
+    induction_fig = figure(2);
+    plot1=plot(results(:,3),results(:,1:2));%,'-o');
+    title('Induction factors');
+    legend('a for TSR = 6','a'' for TSR = 6', 'a for TSR = 8','a'' for TSR = 8','a for TSR = 10', 'a'' for TSR = 10','Location','Best')
+    saveas(induction_fig, 'induction_vs_radius_var_TSR.png');
+    xlabel('r/R');
+    ylabel('Induction Factor');
+    hold on;
+end 
+
+%% Power Coefficients
+%for variable yaw
+if variable_yaw
+    force_fig = figure(3);
+    f_plot1=plot(results(:,3),results(:,4:5));
+    title('Dimensionless power coefficients');
+    legend('C_T for Yaw angle = 0','C_n for Yaw angle = 0', 'C_T for Yaw angle = 15','C_n for Yaw angle = 15', 'C_T for Yaw angle = 30', 'C_n for Yaw angle = 30','Location','Best')
+    hold on;
+    saveas(force_fig, 'forces_vs_radius_var_yaw.png');
+    xlabel('r/R');
+    ylabel('Power Coefficients');
+end
+
+%for variable TSR
+if variable_TSR
+    force_fig = figure(3);
+    fplot=plot(results(:,3),results(:,4:5));
+    title('Dimensionless power coefficients');
+    legend('C_T for TSR = 6','C_n for TSR = 6', 'C_T for TSR = 8','C_n for TSR = 8','C_T for TSR = 10', 'C_n for TSR = 10','Location','Best')
+    hold on;
+    xlabel('r/R');
+    ylabel('Power Coefficients');
+    saveas(force_fig, 'forces_vs_radius_var_TSR.png');
+end
+
+
+
+%{
+%Plot angles of incidence
+angles_fig = figure(4);
+plot(results(:,3), results(:,7:8));
+alpha = '\alpha';
+phi = '\phi';
+legend(sprintf('Angle of attack %s for a TSR of %d',alpha, TSR), sprintf('Inflowangle %s for a TSR of %d',phi, TSR));
+
+hold on;
+
+% tracking legends
+if (strlength(plot_legends.legend_angles(1)) > 1 && variable_TSR)
+    plot_legends.legend_angles = [plot_legends.legend_angles, sprintf('Angle of attack %s for a TSR of %d',alpha, TSR)];
+    plot_legends.legend_angles = [plot_legends.legend_angles, sprintf('Inflowangle %s for a TSR of %d',phi, TSR)];
+elseif (variable_TSR)
+    plot_legends.legend_angles(1) = [sprintf('Angle of attack %s for a TSR of %d',alpha, TSR)];
+    plot_legends.legend_angles = [plot_legends.legend_angles, sprintf('Inflowangle %s for a TSR of %d',phi, TSR)];
+elseif(strlength(plot_legends.legend_angles(1)) > 1 && variable_yaw)
+    plot_legends.legend_angles = [plot_legends.legend_angles, sprintf('Angle of attack %s for a yaw of %d',alpha, yaw)];
+    plot_legends.legend_angles = [plot_legends.legend_angles, sprintf('Inflowangle %s for a yaw of %d',phi, yaw)];
+elseif (variable_yaw)
+    plot_legends.legend_angles(1) = [sprintf('Angle of attack %s for a yaw of %d',alpha, yaw)];
+    plot_legends.legend_angles = [plot_legends.legend_forces, sprintf('Inflowangle %s for a yaw of %d',phi, yaw)];
+end
+
+
+% tracking legends
+if (strlength(plot_legends.legend_forces(1)) > 1 && variable_TSR) 
+    plot_legends.legend_forces = [plot_legends.legend_forces, sprintf('C_n for a TSR of %d', TSR)];
+    plot_legends.legend_forces = [plot_legends.legend_forces, sprintf('C_t for a TSR of %d', TSR)];
+elseif (strlength(plot_legends.legend_forces(1)) > 1 && variable_yaw) 
+    plot_legends.legend_forces = [plot_legends.legend_forces, sprintf('C_n for a yaw of %d', yaw)];
+    plot_legends.legend_forces = [plot_legends.legend_forces, sprintf('C_t for a yaw of %d', yaw)];
+elseif (variable_TSR)
+    legend(sprintf('C_n for a TSR of %d', TSR), sprintf('C_t for a TSR of %d', TSR));
+    plot_legends.legend_forces(1) = [sprintf('C_n for a TSR of %d', TSR)];
+    plot_legends.legend_forces = [plot_legends.legend_forces, sprintf('C_t for a TSR of %d', TSR)];
+elseif (variable_yaw)
+    legend(sprintf('C_n for a yaw of %d', yaw), sprintf('C_t for a yaw of %d', yaw));
+    plot_legends.legend_forces(1) = [sprintf('C_n for a yaw of %d', yaw)];
+    plot_legends.legend_forces = [plot_legends.legend_forces, sprintf('C_t for a yaw of %d', yaw)];
+end
+%}
+
+
+%Plot circulation
+circulation_fig = figure(4);
+plot(results(:,3), results(:,6)/circulation_dimension);
+title('Non-dimensionalized circulation');
+hold on;
+
+% tracking legends
+if (strlength(plot_legends.legend_circulation(1)) > 1 && variable_TSR)
+    plot_legends.legend_circulation = [plot_legends.legend_circulation, sprintf('Circulation for a TSR of %d', TSR)];
+elseif (strlength(plot_legends.legend_circulation(1)) > 1 && variable_yaw)
+    plot_legends.legend_circulation = [plot_legends.legend_circulation, sprintf('Circulation for a yaw of %d', yaw)];
+elseif  (variable_TSR)
+    plot_legends.legend_circulation(1) = sprintf('Circulation for a TSR of %d', TSR);
+elseif  (variable_yaw)
+    plot_legends.legend_circulation(1) = sprintf('Circulation for a yaw of %d', yaw);
+    
+end
+
+
+induction_fig = figure(2);
+plot(results(:,3),results(:,1:2));%,'-o');
+title('Induction factors');
+legend('a for annuli = 20','a'' for annuli = 20', 'a for annuli = 50','a'' for annuli = 50','a for annuli = 150', 'a'' for annuli = 150','Location','Best')
+xlabel('r/R');
+ylabel('Induction Factor');
+hold on;
+
+

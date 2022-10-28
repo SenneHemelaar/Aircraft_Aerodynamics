@@ -25,9 +25,9 @@ avl_file = strcat('GEOMETRY_',string(f));
 % Nsw     : No. of Spanwise Sections Winglet        [-]
 
 %%%=============================INPUTS==================================%%%
-lw        = 0.6;
+lw        = 0.06;
 Lam       = 30;
-phiw      = 0;
+phiw      = linspace(0,90,10);
 cwr       = 0.8;
 lam       = 0.4;
 epsR      = 0;
@@ -45,22 +45,25 @@ lw   = lw*2*L;         Lam  = deg2rad(Lam);
 phiw = deg2rad(phiw);  cwr  = cwr * cT;
 epsR = deg2rad(epsR);  epsT = deg2rad(epsT);
 
+
+%%
+M_list = zeros(10,1);
+for i = 1:10
 %%%==================LOADING OPTIMIZATION RESULTS=======================%%%
-k_0 = load('x_vector_k_0.mat');   k_0  = k_0.x;
-k_05= load('x_vector_k_0.5.mat'); k_05 = k_05.x;
-k_1 = load('x_vector_k_1.mat');   k_1  = k_1.x;
-
-lw   = k_1(1);
-phiw = k_1(2);
-cwr  = k_1(3);
-lam  = k_1(4);
-Lam  = k_1(5);
-epsR = k_1(6);
-epsT = k_1(7);
-
+% k_0 = load('x_vector_k_0.mat');   k_0  = k_0.x;
+% k_05= load('x_vector_k_0.5.mat'); k_05 = k_05.x;
+% k_1 = load('x_vector_k_1.mat');   k_1  = k_1.x;
+% 
+% lw   = k_1(1);
+% phiw = k_1(2);
+% cwr  = k_1(3);
+% lam  = k_1(4);
+% Lam  = k_1(5);
+% epsR = k_1(6);
+% epsT = k_1(7);
 %%%====================CREATE AVL GEOMETRY FILE=========================%%%
 writeAVL(avl_file, lw, cwr, lam, epsR,...
-         epsT, Lam, phiw, 105, 3.75,...
+         epsT, Lam, phiw(i), 105, 3.75,...
          28,  Ncm,  Nsm,   Ncw,  Nsw)
 %--------avl_file, lw, cwr, lamw, epsr,...
 %--------epst, Lamw, phiw, Sref, cref,...
@@ -76,14 +79,29 @@ Forces = forces(avl_file);
 %%%=====================COMPUTE OBJECT FUNCTION=========================%%%
 q = 16193;
 k = 1;
-[J, M] = optimization_function(Forces, q, k);
 
+[J, M] = optimization_function(Forces, q, k);
+M_list(i) = M;
+end
 lw   = lw/(2*L);
 phiw = rad2deg(phiw);
 cwr  = cwr/cT;
 Lam  = rad2deg(Lam);
 epsR = rad2deg(epsR);
 epsT = rad2deg(epsT);
+
+%% plot
+
+figure;
+plot(phiw, M_list)
+xlabel('phi w [deg]'); ylabel('Bending Moment [nM]')
+
+
+
+
+
+
+
 
 
 
