@@ -193,8 +193,8 @@ for V_inf=1:50
                 pr_corr = 1e-2;
             end
             %stabilise iteration
-            a_i_1 = 0.5 * a_i_0 + 0.5 * a_i_1*pr_corr; 
-            b_i_1 = 0.5 * b_i_0 + 0.5 * b_i_1*pr_corr;
+            a_i_1 = 0.5 * a_i_0 + 0.5 * a_i_1/pr_corr; 
+            b_i_1 = 0.5 * b_i_0 + 0.5 * b_i_1/pr_corr;
             
             %check for convergence
             if (abs(a_i_1-a_i_0)<1.0e-5) && (abs(b_i_1-b_i_0)<1.0e-5)
