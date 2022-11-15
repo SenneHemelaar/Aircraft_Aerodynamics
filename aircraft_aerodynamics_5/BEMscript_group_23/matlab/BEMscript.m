@@ -6,7 +6,7 @@ close all;
 
 %% Settings
 variable_TSR = false;
-variable_yaw = true;
+variable_yaw = false;
 iteratingDesignParameters = false;
 cosine_radial_distribution = false;
 
