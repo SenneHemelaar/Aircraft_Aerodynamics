@@ -13,8 +13,14 @@ rho = 1.225;
 sec = [0.2 0.3 0.45 0.6 0.7 0.8 0.9 0.95];
 
 r_steps = length(sec);
-dr = [0.1 diff(sec)]*D;
+dr = [diff(sec) 0.05];
 
+%Set if pradtl tip and root correction is used
+PrandtlCorrection_deg_25 = false;
+PrandtlCorrection_deg_35 = false;
+PrandtlCorrection_deg_45 = false;
+
+DiagnosticInfo = false;
 %Import lift data
 
 fid = csvread('CL_alpha.csv',2);
@@ -95,140 +101,58 @@ pitch.deg_45(2,:) = pitch.deg_45(2,:)*D;
 
 
 
-
-fail = 0;
-for V_inf=1:50
-    fprintf('\n     V_inf = %.2f     \n',V_inf)
-    TSR = n*tipR/V_inf;
-    %initialise sums
-    thrust=0.0;
-    torque=0.0;
-    %loop over each blade element
-    for j=1:r_steps
-        
-        r = sec(j)*(D/2); % add later -0.5*dr(j);
-        r_R = r/tipR;
-        theta = interp1(pitch.deg_25(1,:),pitch.deg_25(2,:),sec(j),'spline');
-        theta = atan(theta/2/pi/r);
-        a_i_0=0.1;
-        b_i_0=0.01;
-        %set logical variable to control iteration
-        finished=false;
-        %set iteration count and check flag
-        sum=1;
-        itercheck=0;
-        
-        while (~finished)
-            %%%====Equations 3 & 4====%%%
-            %%% Calculate velocities
-            %axial velocity
-            Vax=V_inf*(1+a_i_0);
-            %disk plane velocity
-            Vtan=omega*r*(1-b_i_0);
-            
-            % Equation 3
-            %local velocity at blade
-            Vp=sqrt(Vax^2+Vtan^2);
-            
-            % Equation 4
-            %flow angle %which flow angle
-            phi=atan2(Vax,Vtan);
-            %blade angle of attack 
-            alpha=theta-phi;
-            
-            %%%====Equations 1 & 2 ====%%%
-            %%% Get lift and drag coefficients
-            % lift coefficient
-            if j == 1
-                cl = 0;
-            elseif j == 2
-                cl = 0.045*alpha;
-            else
-                cl = interp1(Cl_a.(Cl_a_sec_fn{j})(1,:), ... 
-                             Cl_a.(Cl_a_sec_fn{j})(2,:), ...
-                             rad2deg(alpha));
-            end
-            
-            % drag coefficient
-            if j == 1
-                cd = 0.4;
-            elseif j == 2
-                cd = 0.1;
-            else 
-                cd = 1/(interp1(Cd_a.(Cd_a_sec_fn{j})(1,:), ... 
-                                Cd_a.(Cd_a_sec_fn{j})(2,:), ...
-                                rad2deg(alpha),'spline')/cl);
-            end
-            % chord 
-            
-            chord_j = interp1(chord(1,:), ... 
-                              chord(2,:), ...
-                              sec(j),'spline');
-                          
-            % Equation 1 divided by dr
-            DTdr = 0.5 * rho * chord_j * Vp^2 * (cl*cos(phi) - cd*sin(phi)) * N;
-            
-            % Equation 2 divided by dr
-            DQdr = 0.5 * rho * chord_j * Vp^2 * (cd*cos(phi) + cl*sin(phi)) * N*r;
-
-            %%%====Equations 5 & 6====%%%
-            %inflow and swirl
-            a_i_1 = DTdr/(rho * 4 * pi * r * V_inf^2 * (1+a_i_0));
-            b_i_1 = DQdr/(rho * 4 * pi * r^3 * V_inf * (1+a_i_0) * omega);
-            
-            %%% Prandtl tip and root losses %%% 
-            
-            
-            temp1 = -N/2 * ((tipR/tipR)-r_R)/r_R *sqrt( 1+ ((TSR*r_R)^2)/((1-a_i_1)^2));
-            F_tip = 2/pi * acos(exp(temp1));
-            F_tip(isnan(F_tip)) = 0;
-            
-            temp2 = N/2 * ((rootR/tipR)-r_R)/r_R *sqrt( 1+ ((TSR*r_R)^2)/((1-a_i_1)^2));
-            F_root = 2/pi * acos(exp(temp2));            
-            F_root(isnan(F_root)) = 0;
-            
-            pr_corr = F_tip*F_root;
-            
-            if pr_corr < 1e-3
-                pr_corr = 1e-2;
-            end
-            %stabilise iteration
-            a_i_1 = 0.5 * a_i_0 + 0.5 * a_i_1/pr_corr; 
-            b_i_1 = 0.5 * b_i_0 + 0.5 * b_i_1/pr_corr;
-            
-            %check for convergence
-            if (abs(a_i_1-a_i_0)<1.0e-5) && (abs(b_i_1-b_i_0)<1.0e-5)
-                finished=true;
-            end
-
-
-            a_i_0=a_i_1;
-            b_i_0=b_i_1;
-            %increment iteration count
-            sum=sum+1;
-            %check to see if iteration stuck
-            if (sum>20)
-                finished=true;
-                itercheck=1;
-                fail = fail + 1;
-            end
-            
-        end
-        thrust=thrust+DTdr*dr(j);
-        torque=torque+DQdr*dr(j);
-
-        fprintf('j = %i |  cl = %.2f, cd = %.2f, r =  %.2f, dr =  %.2f,',[j cl cd r dr(j)]);
-        fprintf('chord = %.2f, pitch = %.2f, alpha = %.2f, Ftip = %.2f, Froot = %.2f \n',[chord_j,rad2deg(theta),rad2deg(alpha),F_tip,F_root]);
+% Blade setting 25 deg
+for V_inf=10:30
+    [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
+                                    tipR,rootR,pitch.deg_25,omega,N, n, r_steps, rho, ...
+                                    Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
+                                    PrandtlCorrection_deg_25,DiagnosticInfo);
     
-    end
-    CT(V_inf)=thrust/(rho*n^2*D^4);
-    CP(V_inf)=torque/(rho*n^2*D^5);
-    J(V_inf)=V_inf/(n*D);
-    alpha_lib(V_inf) = alpha;
-    if CT(V_inf) < 0
-        eff(V_inf) = 0;
+    %Calculate coefficients
+    CT_25(V_inf)=thrust/(rho*n^2*D^4);
+    CP_25(V_inf)=power/(rho*n^3*D^5);
+    J_25(V_inf)=V_inf/(n*D);
+    if CT_25(V_inf) < 0
+        eff_25(V_inf) = 0;
     else
-        eff(V_inf)=J(V_inf)/2.0/pi*(CT(V_inf)/CP(V_inf));
+        eff_25(V_inf)=  J_25(V_inf)*(CT_25(V_inf)/CP_25(V_inf)); %J_25(V_inf)/2.0/pi*(CT_25(V_inf)/CP_25(V_inf));
+    end
+    
+end
+
+% Blade setting 35 deg
+
+for V_inf=20:40
+    [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
+                                    tipR,rootR,pitch.deg_35,omega,N, n, r_steps, rho, ...
+                                    Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
+                                    PrandtlCorrection_deg_35,DiagnosticInfo);    
+
+    CT_35(V_inf)=thrust/(rho*n^2*D^4);
+    CP_35(V_inf)=power/(rho*n^3*D^5);
+    J_35(V_inf)=V_inf/(n*D);
+    if CT_35(V_inf) < 0
+        eff_35(V_inf) = 0;
+    else
+        eff_35(V_inf)=J_35(V_inf)*(CT_35(V_inf)/CP_35(V_inf));
+    end
+    
+end
+
+% Blade setting 45 deg
+
+for V_inf=35:55
+        [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
+                                    tipR,rootR,pitch.deg_45,omega,N, n, r_steps, rho, ...
+                                    Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
+                                    PrandtlCorrection_deg_45,DiagnosticInfo);   
+    CT_45(V_inf)=thrust/(rho*n^2*D^4);
+    CP_45(V_inf)=power/(rho*n^3*D^5);
+    J_45(V_inf)=V_inf/(n*D);
+    if CT_45(V_inf) < 0
+        eff_45(V_inf) = 0;
+    else
+        eff_45(V_inf)=J_45(V_inf)*(CT_45(V_inf)/CP_45(V_inf));
     end
     
 end
@@ -284,33 +208,59 @@ eta_j.deg_45 = [a';b'];
 %Jmax=max(J);
 %CTmax=max(CT);
 
-
+set(groot,'defaultLineLineWidth',2.0)
 %fit curves
-f_Cp = fit(Cp_j.deg_25(1,:)',Cp_j.deg_25(2,:)','smoothingspline');
-f_Ct = fit(Ct_j.deg_25(1,:)',Ct_j.deg_25(2,:)','smoothingspline');
-f_eta = fit(eta_j.deg_25(1,:)',eta_j.deg_25(2,:)','smoothingspline');
+f_Cp_25 = fit(Cp_j.deg_25(1,:)',Cp_j.deg_25(2,:)','smoothingspline');
+f_Ct_25 = fit(Ct_j.deg_25(1,:)',Ct_j.deg_25(2,:)','smoothingspline');
+f_eta_25 = fit(eta_j.deg_25(1,:)',eta_j.deg_25(2,:)','smoothingspline');
+f_Cp_35 = fit(Cp_j.deg_35(1,:)',Cp_j.deg_35(2,:)','smoothingspline');
+f_Ct_35 = fit(Ct_j.deg_35(1,:)',Ct_j.deg_35(2,:)','smoothingspline');
+f_eta_35 = fit(eta_j.deg_35(1,:)',eta_j.deg_35(2,:)','smoothingspline');
+f_Cp_45 = fit(Cp_j.deg_45(1,:)',Cp_j.deg_45(2,:)','smoothingspline');
+f_Ct_45 = fit(Ct_j.deg_45(1,:)',Ct_j.deg_45(2,:)','smoothingspline');
+f_eta_45 = fit(eta_j.deg_45(1,:)',eta_j.deg_45(2,:)','smoothingspline');
 
 f1 = figure(1);
 hold on 
-plot(J,CT,J,CP)
-plot(f_Ct,'m',Ct_j.deg_25(1,:)',Ct_j.deg_25(2,:)')
-plot(f_Cp,'c',Cp_j.deg_25(1,:)',Cp_j.deg_25(2,:)')
+plot(J_25,CT_25,'m',J_25,CP_25,'c')
+plot(J_35,CT_35,'m-.',J_35,CP_35,'c-.')
+plot(J_45,CT_45,'m--',J_45,CP_45,'c--')
+plot(f_Ct_25,'m',Ct_j.deg_25(1,:)',Ct_j.deg_25(2,:)')
+plot(f_Cp_25,'c',Cp_j.deg_25(1,:)',Cp_j.deg_25(2,:)')
+plot(f_Ct_35,'m-.',Ct_j.deg_35(1,:)',Ct_j.deg_35(2,:)')
+plot(f_Cp_35,'c-.',Cp_j.deg_35(1,:)',Cp_j.deg_35(2,:)')
+plot(f_Ct_45,'m--',Ct_j.deg_45(1,:)',Ct_j.deg_45(2,:)')
+plot(f_Cp_45,'c--',Cp_j.deg_45(1,:)',Cp_j.deg_45(2,:)')
 
 title('Thrust and Torque Coefficients')
 xlabel('Advance Ratio (J)');
 ylabel('C_T, C_P');
-legend('C_T computed','C_P computed', ...
-       'C_T experimental', 'C_T experimental fitted', ...
-       'C_P experimental', 'C_P experimental fitted','Location','best');
+legend('C_T computed \beta = 25 deg','C_P computed \beta = 25 deg', ...
+       'C_T computed \beta = 35 deg','C_P computed \beta = 35 deg', ...
+       'C_T computed \beta = 45 deg','C_P computed \beta = 45 deg', ...
+       'C_T experimental \beta = 25 deg', 'C_T experimental fitted \beta = 25 deg', ...
+       'C_P experimental \beta = 25 deg', 'C_P experimental fitted \beta = 25 deg', ...
+       'C_T experimental \beta = 35 deg', 'C_T experimental fitted \beta = 35 deg', ...
+       'C_P experimental \beta = 35 deg', 'C_P experimental fitted \beta = 35 deg', ...
+       'C_T experimental \beta = 45 deg', 'C_T experimental fitted \beta = 45 deg', ...
+       'C_P experimental \beta = 45 deg', 'C_P experimental fitted \beta = 45 deg','Location','best');
    
 hold off
 
 
 f2 = figure(2);
 hold on
-plot(J,eff);
-plot(f_eta,'m',eta_j.deg_25(1,:)',eta_j.deg_25(2,:)')
+
+plot(J_25,eff_25);
+plot(f_eta_25,'m',eta_j.deg_25(1,:)',eta_j.deg_25(2,:)')
+plot(J_35,eff_35);
+plot(f_eta_35,'m',eta_j.deg_35(1,:)',eta_j.deg_35(2,:)')
+plot(J_45,eff_45);
+plot(f_eta_45,'m',eta_j.deg_45(1,:)',eta_j.deg_45(2,:)')
 title('Propeller Efficiency');
 xlabel('Advance Ratio (J)');
 ylabel('\eta');
-legend('\eta computed', '\eta experimental', '\eta experimental fitted');
+legend('\eta computed \beta = 25 deg', '\eta experimental \beta = 25 deg', '\eta experimental fitted \beta = 25 deg', ...
+       '\eta computed \beta = 35 deg', '\eta experimental \beta = 35 deg', '\eta experimental fitted \beta = 35 deg', ...
+       '\eta computed \beta = 45 deg', '\eta experimental \beta = 45 deg', '\eta experimental fitted \beta = 45 deg', ...
+       'Location','best');
