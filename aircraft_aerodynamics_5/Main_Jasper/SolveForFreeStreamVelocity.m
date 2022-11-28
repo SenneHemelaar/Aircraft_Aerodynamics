@@ -1,14 +1,17 @@
-function [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
+function [thrust, power, torque, AxialVelocity] = SolveForFreeStreamVelocity(V_inf, ...
                                     tipR,rootR,pitch,omega,N,n, r_steps, rho, ...
-                                    Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
+                                    CD,CL,sec_mesh,a_mesh, chord, ...
                                     PrandtlCorrection,DiagnosticInfo)
     TSR = n*tipR/V_inf;
+    sec = linspace(rootR/tipR,tipR/tipR,r_steps);
+    dr = diff(sec);
     %initialise sums
     thrust=0.0;
     torque=0.0;
     power =0.0;
     %loop over each blade element
-    for j=1:r_steps
+    AxialVelocity = zeros(1,r_steps);
+    for j=1:(r_steps-1)
         
         r = (sec(j) + 0.5*dr(j))*tipR;
         r_R = r/tipR;
@@ -43,26 +46,11 @@ function [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
             %%%====Equations 1 & 2 ====%%%
             %%% Get lift and drag coefficients
             % lift coefficient
-            if j == 1
-                cl = 0;
-            elseif j == 2
-                cl = 0.045*alpha;
-            else
-                cl = interp1(Cl_a.(Cl_a_sec_fn{j})(1,:), ... 
-                             Cl_a.(Cl_a_sec_fn{j})(2,:), ...
-                             rad2deg(alpha));
-            end
+            cl = interp2(sec_mesh,a_mesh,CL,r_R,rad2deg(alpha));
             
             % drag coefficient
-            if j == 1
-                cd = 0.4;
-            elseif j == 2
-                cd = 0.1;
-            else 
-                cd = 1/(interp1(Cd_a.(Cd_a_sec_fn{j})(1,:), ... 
-                                Cd_a.(Cd_a_sec_fn{j})(2,:), ...
-                                rad2deg(alpha),'spline')/cl);
-            end
+            cd = interp2(sec_mesh,a_mesh,CD,r_R,rad2deg(alpha));
+            
             
             % chord 
             
@@ -127,10 +115,10 @@ function [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
         thrust= thrust + DTdr*dr(j)*tipR;
         torque= torque + DQdr*dr(j)*tipR;
         power = power +  DQdr*dr(j)*tipR*omega;
-        
+        AxialVelocity(j) = a_i_0;
         if DiagnosticInfo
             fprintf('j = %i |  cl = %.2f, cd = %.2f, r =  %.2f, dr =  %.2f,',[j cl cd r dr(j)*tipR]);
-            fprintf('chord = %.2f, pitch = %.2f, alpha = %.2f, Ftotal = %f\n',[chord_j,rad2deg(theta),rad2deg(alpha),F_tip*F_root]);
+            fprintf('chord = %.2f, pitch = %.2f, alpha = %.2f, Ftotal = %f\n',[chord_j,rad2deg(theta),rad2deg(alpha),pr_corr]);
         end
     end
 end
