@@ -5,67 +5,119 @@ clc
 N = 4;
 D = 3.04;
 tipR = D/2;
-rootR = 0.1*tipR;
+rootR = 0.2*tipR;
 RPM = 400;
 n = RPM/60;
 omega = n*pi*2;
 rho = 1.225;
 sec = [0.2 0.3 0.45 0.6 0.7 0.8 0.9 0.95];
 
-r_steps = length(sec);
-dr = [diff(sec) 0.05];
+r_steps = 9;
+sections = linspace(rootR/tipR,tipR/tipR,r_steps);
+
+dr = [diff(sections) 0.05];
 
 %Set if pradtl tip and root correction is used
-PrandtlCorrection_deg_25 = false;
-PrandtlCorrection_deg_35 = false;
-PrandtlCorrection_deg_45 = false;
+PrandtlCorrection_deg_25 = true;
+PrandtlCorrection_deg_35 = true;
+PrandtlCorrection_deg_45 = true;
 
-DiagnosticInfo = false;
+DiagnosticInfo = true;
 %Import lift data
 
 fid = csvread('CL_alpha.csv',2);
+a_steps = 10;
+a_grid = linspace(-8,8,a_steps);
 
-Cl_a.sec_1 = [-4 6; 0.0001 0.0001];
-Cl_a.sec_2 = fid(1:2,1:2)';
-Cl_a.sec_3 = fid(1:2,3:4)';
-Cl_a.sec_4 = fid(1:2,5:6)';
-Cl_a.sec_5 = fid(1:2,7:8)';
-Cl_a.sec_6 = fid(1:2,9:10)';
-Cl_a.sec_7 = fid(1:2,11:12)';
-Cl_a.sec_8 = fid(1:2,13:14)';
+cl_points = [-4 6; 0.0 0.0];
+Cl_a.sec_1(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_1(1,:) = a_grid;
+
+cl_points = fid(1:2,1:2)';
+Cl_a.sec_2(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_2(1,:) = a_grid;
+
+cl_points = fid(1:2,3:4)';
+Cl_a.sec_3(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_3(1,:) = a_grid;
+
+cl_points = fid(1:2,5:6)';
+Cl_a.sec_4(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_4(1,:) = a_grid;
+
+cl_points = fid(1:2,7:8)';
+Cl_a.sec_5(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_5(1,:) = a_grid;
+
+cl_points = fid(1:2,9:10)';
+Cl_a.sec_6(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_6(1,:) = a_grid;
+
+cl_points = fid(1:2,11:12)';
+Cl_a.sec_7(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_7(1,:) = a_grid;
+
+cl_points = fid(1:2,13:14)';
+Cl_a.sec_8(2,:) = interp1(cl_points(1,:), cl_points(2,:), a_grid,'linear','extrap');
+Cl_a.sec_8(1,:) = a_grid;
+
 Cl_a_sec_fn = fieldnames(Cl_a);
+
+[sec_mesh,a_mesh]  = meshgrid(sec,a_grid);
+CL = [Cl_a.sec_1(2,:)' Cl_a.sec_2(2,:)' Cl_a.sec_3(2,:)' Cl_a.sec_4(2,:)' ...
+      Cl_a.sec_5(2,:)' Cl_a.sec_6(2,:)' Cl_a.sec_7(2,:)' Cl_a.sec_8(2,:)'];
 %Import L/D data
 
 fid = csvread('L_D_alpha.csv',2);
 
-Cd_a.sec_1 = [-6 6; 0.00025 0.00025];
-Cd_a.sec_2 = [-6 6; 0.001 0.001];
+cd_points = [-6 6; 0.4 0.4];
+CL_CD = interp1(cd_points(1,:), cd_points(2,:), a_grid,'linear','extrap');
+Cd_a.sec_1 = [a_grid; CL_CD ];
+
+cd_points = [-6 6; 0.1 0.1];
+CL_CD = interp1(cd_points(1,:), cd_points(2,:), a_grid,'linear','extrap');
+Cd_a.sec_2 = [a_grid; CL_CD ];
 
 a = nonzeros(fid(:,1)');
 b = nonzeros(fid(:,2)');
-Cd_a.sec_3 = [a';b'];
+CL_CD = interp1(a, b, a_grid,'pchip','extrap');
+Cd_a.sec_3 = [a_grid; 1./(CL_CD./Cl_a.sec_3(2,:)) ];
 
 a = nonzeros(fid(:,3)');
 b = nonzeros(fid(:,4)');
-Cd_a.sec_4 = [a';b'];
+CL_CD = interp1(a, b, a_grid,'pchip','extrap');
+Cd_a.sec_4 = [a_grid; 1./(CL_CD./Cl_a.sec_4(2,:)) ];
+
 
 a = nonzeros(fid(:,5)');
 b = nonzeros(fid(:,6)');
-Cd_a.sec_5 = [a';b'];
+CL_CD = interp1(a, b, a_grid,'pchip','extrap');
+Cd_a.sec_5 = [a_grid; 1./(CL_CD./Cl_a.sec_5(2,:)) ];
 
 a = nonzeros(fid(:,7)');
 b = nonzeros(fid(:,8)');
-Cd_a.sec_6 = [a';b'];
+CL_CD = interp1(a, b, a_grid,'pchip','extrap');
+Cd_a.sec_6 = [a_grid; 1./(CL_CD./Cl_a.sec_6(2,:)) ];
 
 a = nonzeros(fid(:,9)');
 b = nonzeros(fid(:,10)');
-Cd_a.sec_7 = [a';b'];
+CL_CD = interp1(a, b, a_grid,'pchip','extrap');
+Cd_a.sec_7 = [a_grid; 1./(CL_CD./Cl_a.sec_7(2,:)) ];
 
 a = nonzeros(fid(:,11)');
 b = nonzeros(fid(:,12)');
-Cd_a.sec_8 = [a';b'];
+CL_CD = interp1(a, b, a_grid,'pchip','extrap');
+Cd_a.sec_8 = [a_grid; 1./(CL_CD./Cl_a.sec_8(2,:)) ];
+
+% %data correction
+% Cd_a.sec_4(2,7) = (Cd_a.sec_4(2,6)+Cd_a.sec_4(2,8))*0.5;
+% Cd_a.sec_5(2,9) = (Cd_a.sec_5(2,8)+Cd_a.sec_5(2,10))*0.5;
+% Cd_a.sec_8(2,3) = (Cd_a.sec_8(2,2)+ Cd_a.sec_8(2,4))*0.5;
 
 Cd_a_sec_fn = fieldnames(Cd_a);
+CD = [Cd_a.sec_1(2,:)' Cd_a.sec_2(2,:)' Cd_a.sec_3(2,:)' Cd_a.sec_4(2,:)' ...
+      Cd_a.sec_5(2,:)' Cd_a.sec_6(2,:)' Cd_a.sec_7(2,:)' Cd_a.sec_8(2,:)'];
+  
 
 %Import chord length distribution
 fid = csvread('Chord_Pitch_radial.csv',2);
@@ -97,10 +149,10 @@ pitch.deg_45(2,:) = pitch.deg_45(2,:)*D;
 
 
 % Blade setting 25 deg
-for V_inf=10:30
-    [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
+for V_inf=1:30
+    [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf, ...
                                     tipR,rootR,pitch.deg_25,omega,N, n, r_steps, rho, ...
-                                    Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
+                                    CD,CL,sec_mesh,a_mesh, chord, ...
                                     PrandtlCorrection_deg_25,DiagnosticInfo);
     
     %Calculate coefficients
@@ -108,7 +160,10 @@ for V_inf=10:30
     CP_25(V_inf)=power/(rho*n^3*D^5);
     J_25(V_inf)=V_inf/(n*D);
     if CT_25(V_inf) < 0
-        eff_25(V_inf) = 0;
+        eff_25(V_inf) = NaN;
+    elseif CT_25(V_inf) == 0
+        CT_25(V_inf) = NaN;
+        CP_25(V_inf) = NaN;
     else
         eff_25(V_inf)=  J_25(V_inf)*(CT_25(V_inf)/CP_25(V_inf)); %J_25(V_inf)/2.0/pi*(CT_25(V_inf)/CP_25(V_inf));
     end
@@ -119,14 +174,17 @@ end
 for V_inf=20:40
     [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
                                     tipR,rootR,pitch.deg_35,omega,N, n, r_steps, rho, ...
-                                    Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
+                                    CD,CL,sec_mesh,a_mesh, chord, ...
                                     PrandtlCorrection_deg_35,DiagnosticInfo);    
 
     CT_35(V_inf)=thrust/(rho*n^2*D^4);
     CP_35(V_inf)=power/(rho*n^3*D^5);
     J_35(V_inf)=V_inf/(n*D);
     if CT_35(V_inf) < 0
-        eff_35(V_inf) = 0;
+        eff_35(V_inf) = NaN;
+    elseif CT_35(V_inf) == 0
+        CT_35(V_inf) = NaN;
+        CP_35(V_inf) = NaN;        
     else
         eff_35(V_inf)=J_35(V_inf)*(CT_35(V_inf)/CP_35(V_inf));
     end
@@ -137,19 +195,25 @@ end
 for V_inf=35:55
         [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
                                     tipR,rootR,pitch.deg_45,omega,N, n, r_steps, rho, ...
-                                    Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
-                                    PrandtlCorrection_deg_45,DiagnosticInfo);   
+                                    CD,CL,sec_mesh,a_mesh, chord, ...
+                                    PrandtlCorrection_deg_45,DiagnosticInfo);  
     CT_45(V_inf)=thrust/(rho*n^2*D^4);
     CP_45(V_inf)=power/(rho*n^3*D^5);
     J_45(V_inf)=V_inf/(n*D);
     if CT_45(V_inf) < 0
-        eff_45(V_inf) = 0;
+        eff_45(V_inf) = NaN;
+    elseif CT_45(V_inf) == 0
+        CT_45(V_inf) = NaN;
+        CP_45(V_inf) = NaN;  
     else
         eff_45(V_inf)=J_45(V_inf)*(CT_45(V_inf)/CP_45(V_inf));
     end
     
 end
 
+
+                                
+                                
 %% 
 %Import Coefficient of Thrust data
 fid = csvread('Ct_J.csv',2);
@@ -198,6 +262,7 @@ eta_j.deg_45 = [a';b'];
 
 
 %fit curves
+
 f_Cp_25 = fit(Cp_j.deg_25(1,:)',Cp_j.deg_25(2,:)','smoothingspline');
 f_Ct_25 = fit(Ct_j.deg_25(1,:)',Ct_j.deg_25(2,:)','smoothingspline');
 f_eta_25 = fit(eta_j.deg_25(1,:)',eta_j.deg_25(2,:)','smoothingspline');
