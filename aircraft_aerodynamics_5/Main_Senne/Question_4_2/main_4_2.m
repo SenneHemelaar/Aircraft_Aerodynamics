@@ -97,7 +97,7 @@ pitch.deg_45(2,:) = pitch.deg_45(2,:)*D;
 
 
 % Blade setting 25 deg
-for V_inf=10:30
+for V_inf=1:50
     [thrust, power, torque] = SolveForFreeStreamVelocity(V_inf,sec,dr, ...
                                     tipR,rootR,pitch.deg_25,omega,N, n, r_steps, rho, ...
                                     Cl_a, Cl_a_sec_fn,Cd_a,Cd_a_sec_fn, chord, ...
@@ -216,7 +216,7 @@ C = linspecer(5);
 %%%=============================== CT ==================================%%%
 
 f1 = figure(1);
-f1.Position = [200 200 1050 500];
+f1.Position = [200 200 1050 450];
 hold on; box on; grid on;
 
 plot(J_25,CT_25,'-','color',C(1,:),'LineWidth',2.5)
@@ -240,7 +240,7 @@ h(1).MarkerSize=15;
 h(2).LineWidth=1.75;
 
 ylim([-0.05 0.3])
-title('Thrust Coefficients $C_T$', 'Interpreter', 'Latex')
+% title('Thrust Coefficients $C_T$', 'Interpreter', 'Latex')
 xlabel('Advance Ratio $J$', 'Interpreter','Latex');
 ylabel('$C_T$', 'Interpreter', 'latex');
 legend('$\beta = 25 ^{\circ}$, BEM', ...
@@ -258,7 +258,7 @@ hold off
 %%%=============================== CP ==================================%%%
 
 f2 = figure(2);
-f2.Position = [300 300 1050 500];
+f2.Position = [300 300 1050 450];
 hold on; box on; grid on;
 
 plot(J_25,CP_25,'-','color',C(1,:),'LineWidth',2.5)
@@ -282,7 +282,7 @@ h(1).Color=[0 0 0];
 h(1).MarkerSize=15;
 h(2).LineWidth=1.75;
 
-title('Torque Coefficients $C_P$', 'Interpreter', 'latex')
+% title('Torque Coefficients $C_P$', 'Interpreter', 'latex')
 xlabel('Advance Ratio $J$', 'Interpreter', 'latex');
 ylabel('$C_P$', 'Interpreter', 'latex');
 legend('$\beta = 25 ^{\circ}$, BEM', ...
@@ -300,24 +300,24 @@ hold off
 % %%%=============================== eff =================================%%%
 
 f3 = figure(3);
-f3.Position = [400 400 1050 500];
+f3.Position = [400 400 1050 450];
 hold on; box on; grid on;
 
 plot(J_25,eff_25,'-','color',C(1,:),'LineWidth',2.5);
 plot(J_35,eff_35,'-','color',C(2,:),'LineWidth',2.5);
 plot(J_45,eff_45,'-','color',C(3,:),'LineWidth',2.5);
 
-h=plot(f_eta_25,'m',eta_j.deg_25(1,:)',eta_j.deg_25(2,:)');
+h=plot(f_eta_25,'--',eta_j.deg_25(1,:)',eta_j.deg_25(2,:)');
 set(h,'color',C(1,:));
 h(1).Color=[0 0 0];
 h(1).MarkerSize=15;
 h(2).LineWidth=1.75;
-h=plot(f_eta_35,'m',eta_j.deg_35(1,:)',eta_j.deg_35(2,:)');
+h=plot(f_eta_35,'--',eta_j.deg_35(1,:)',eta_j.deg_35(2,:)');
 set(h,'color',C(2,:));
 h(1).Color=[0 0 0];
 h(1).MarkerSize=15;
 h(2).LineWidth=1.75;
-h=plot(f_eta_45,'m',eta_j.deg_45(1,:)',eta_j.deg_45(2,:)');
+h=plot(f_eta_45,'--',eta_j.deg_45(1,:)',eta_j.deg_45(2,:)');
 set(h,'color',C(3,:));
 h(1).Color=[0 0 0];
 h(1).MarkerSize=15;
@@ -328,7 +328,7 @@ xlim([0 3]); ylim([0.5 0.9])
 
 
 
-title('Propeller Efficiency $\eta$', 'Interpreter', 'latex');
+% title('Propeller Efficiency $\eta$', 'Interpreter', 'latex');
 xlabel('Advance Ratio $J$', 'Interpreter', 'latex');
 ylabel('$\eta$', 'Interpreter', 'latex');
 

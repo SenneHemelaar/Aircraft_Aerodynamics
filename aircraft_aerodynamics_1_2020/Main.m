@@ -6,8 +6,8 @@ clc; clear; close all
 
 % Configurable parameters
 U_inf = 10;                         % free stream velocity
-alpha_max = deg2rad(-15);            % maximum angle of attack [rad]
-alpha_min = deg2rad(15);             % minimum angle of attack [rad]
+alpha_max = deg2rad(0);            % maximum angle of attack [rad]
+alpha_min = deg2rad(0);             % minimum angle of attack [rad]
 n_alpha = 30;                       % number of angles of attack to evaluate
 alphas = linspace(alpha_min,...
          alpha_max, n_alpha);       % list of angles of attack
@@ -53,13 +53,13 @@ dCP_val_15 = (CP_val_15(24:end,2)) - flip(CP_val_15(1:22,2));
 dCP_val_10 = (CP_val_10(24:end,2)) - flip(CP_val_10(1:22,2));
 
 % From here all plotting procedures follow
-%{
-% figure(5)
-% plot(CP_val_15(:,1),CP_val_15(:,2))
+
+figure(5)
+plot(CP_val_15(:,1),CP_val_15(:,2))
 
 %% Plotting the results
 
-% Lift polar comparison with open literature
+% % Lift polar comparison with open literature
 % figure(1)
 % box on; hold on; grid on;
 % plot(rad2deg(alphas),CL(:,1),'k-')
@@ -72,7 +72,7 @@ dCP_val_10 = (CP_val_10(24:end,2)) - flip(CP_val_10(1:22,2));
 % xlim([-20, 20])
 % set(gcf,'position',[300,300,950,450])
 
-% Pressure distribution comparison with open literature
+% % Pressure distribution comparison with open literature
 % x1 = linspace(0+0.5*(chord/20), chord-0.5*(chord/20), length(dCp{1}));
 % x2 = linspace(0+0.5*(chord/20), chord-0.5*(chord/20), length(dCP_val_15));
 % figure(2)
@@ -92,7 +92,7 @@ dCP_val_10 = (CP_val_10(24:end,2)) - flip(CP_val_10(1:22,2));
 % legend('Zero-Thickness Panel Method','NACA-0012 Experimental Data','Interpreter','latex')
 % set(gcf,'position',[950,300,700,500])
 
-% Lift polar Varying camber
+% % Lift polar Varying camber
 % figure(5)
 % box on; hold on; grid on;
 % plot(rad2deg(alphas),CL(:,3),'k:','LineWidth',2)
@@ -103,26 +103,26 @@ dCP_val_10 = (CP_val_10(24:end,2)) - flip(CP_val_10(1:22,2));
 % set(gcf,'position',[300,300,950,450])
 % legend('Max Camber = 0.00','Max Camber = 0.02','Max Camber = 0.05','Interpreter','latex','Location','NorthWest')
 
-% Pressure distribution Varying camber
-x1 = linspace(0+0.5*(chord/20), chord-0.5*(chord/20), length(dCp{1}));
-figure(6)
-hold on; grid on; box on;
-% plot(x1, dCp{1,1},'k')
-plot(x1, dCp{1,2},'k--')
-plot(x1, dCp{1,3},'k:','LineWidth',2)
-xlabel('$x/c$','Interpreter','latex')
-ylabel('$\Delta C_P$','Interpreter','latex')
-set(gcf,'position',[100,300,700,500])
-legend('Max Camber = 0.00','Max Camber = 0.02','Max Camber = 0.05','Interpreter','latex')
-figure(7)
-hold on; grid on; box on;
-% plot(x1, dCp{end,1},'k')
-plot(x1, dCp{end,2},'k--')
-plot(x1, dCp{end,3},'k:','LineWidth',2)
-xlabel('$x/c$','Interpreter','latex')
-ylabel('$\Delta C_P$','Interpreter','latex')
-set(gcf,'position',[950,300,700,500])
-legend('Max Camber = 0.00','Max Camber = 0.02','Max Camber = 0.05','Interpreter','latex')
+% % Pressure distribution Varying camber
+% x1 = linspace(0+0.5*(chord/20), chord-0.5*(chord/20), length(dCp{1}));
+% figure(6)
+% hold on; grid on; box on;
+% % plot(x1, dCp{1,1},'k')
+% plot(x1, dCp{1,2},'k--')
+% plot(x1, dCp{1,3},'k:','LineWidth',2)
+% xlabel('$x/c$','Interpreter','latex')
+% ylabel('$\Delta C_P$','Interpreter','latex')
+% set(gcf,'position',[100,300,700,500])
+% legend('Max Camber = 0.00','Max Camber = 0.02','Max Camber = 0.05','Interpreter','latex')
+% figure(7)
+% hold on; grid on; box on;
+% % plot(x1, dCp{end,1},'k')
+% plot(x1, dCp{end,2},'k--')
+% plot(x1, dCp{end,3},'k:','LineWidth',2)
+% xlabel('$x/c$','Interpreter','latex')
+% ylabel('$\Delta C_P$','Interpreter','latex')
+% set(gcf,'position',[950,300,700,500])
+% legend('Max Camber = 0.00','Max Camber = 0.02','Max Camber = 0.05','Interpreter','latex')
 
 
 velocity   = true;
