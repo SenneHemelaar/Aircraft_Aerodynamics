@@ -3,8 +3,8 @@ C = [108/256, 194/256, 74/256; ...
      237/256, 104/256, 66/256; ...
      0, 166/256, 214/256;      ...
      224/256, 60/256, 49/256];
-Thrust_settings = [500,600,1200];
-Power_settings = [18000,20000,40000];
+Thrust_settings = [500,600,700];
+Power_settings = [18000,20000,22000];
 
 D_T_str = ["results_D_T_",'results_D_T_','results_D_T_'];
 D_P_str = ["results_D_P_",'results_D_P_','results_D_P_'];
@@ -101,9 +101,9 @@ N_P_3.N(N_P_3.N == 0) = NaN;
 f4 = figure(4);
 box on; hold on; grid minor;
 f4.Position = [1000 200 700 450];
-plot(N_P_1.N, N_P_1.eff,'o-','Color',C(1,:),'linewidth',1.8)
-plot(N_P_2.N, N_P_2.eff,'o-','Color',C(2,:),'linewidth',1.8)
-plot(N_P_3.N, N_P_3.eff,'o-','Color',C(3,:),'linewidth',1.8)
+plot(results_N_CP_02.N(2:end), results_N_CP_02.eff(2:end),'o-','Color',C(1,:),'linewidth',1.8)
+plot(results_N_CP_015.N(2:end), results_N_CP_015.eff(2:end),'o-','Color',C(2,:),'linewidth',1.8)
+plot(results_N_CP_01.N(2:end), results_N_CP_01.eff(2:end),'o-','Color',C(3,:),'linewidth',1.8)
 % xlim([2 10]); ylim([0.3 0.9])
 xlabel('$N$ [-]','interpreter','latex','fontsize',13)
 ylabel('$\eta$ [-]','interpreter','latex','fontsize',13)

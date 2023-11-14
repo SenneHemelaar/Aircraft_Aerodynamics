@@ -22,6 +22,7 @@ PrandtlCorrection_deg_45 = 0;
 DiagnosticInfo = false;
 
 %% Import lift data
+
 fid = csvread('CL_alpha.csv', 2);
 
 Cl_a.sec_1 = [-4 6; -0.0001 0.0001];
@@ -92,7 +93,7 @@ pitch.deg_45(2,:) = pitch.deg_45(2,:)*D;
 
 %% Loop over free steam velocities: V_inf
 
-V_inf_list =  linspace(10,30,41);
+V_inf_list =  linspace(10,35,41);
 
 for j = 1:length(V_inf_list)
     
@@ -128,40 +129,52 @@ end
 %% Plotting Section
 close all
 
-C = linspecer(5);
-V_inf_selected = [20, 25, 30];
+C = [108/256, 194/256, 74/256; ...
+     237/256, 104/256, 66/256; ...
+     0, 166/256, 214/256;      ...
+     224/256, 60/256, 49/256];
+
+
+V_inf_selected = [20, 25, 30, 35];
 V_inf_ix1  = find(results.V_inf==V_inf_selected(1));
 V_inf_ix2  = find(results.V_inf==V_inf_selected(2));
 V_inf_ix3  = find(results.V_inf==V_inf_selected(3));
-J_selected = [results.J(V_inf_ix1) results.J(V_inf_ix2) results.J(V_inf_ix3)];
+V_inf_ix4  = find(results.V_inf==V_inf_selected(4));
+J_selected = [results.J(V_inf_ix1) results.J(V_inf_ix2) results.J(V_inf_ix3) results.J(V_inf_ix4)];
 
 f1 = figure(1);
-hold on; grid on; box on;
+hold on; grid minor; box on;
 f1.Position = [100 100 1050 450];
-plot(r_R, results.Vax_over_Vinf{V_inf_ix1},'s-','Color',C(1,:),'LineWidth', 2)
-plot(r_R, results.Vax_over_Vinf{V_inf_ix2},'s-','Color',C(2,:),'LineWidth', 2)
-plot(r_R, results.Vax_over_Vinf{V_inf_ix3},'s-','Color',C(3,:),'LineWidth', 2)
-xlabel('$r/R$','interpreter','latex','fontsize',13)
-ylabel('$V_{ax}/V_{\infty}$','interpreter','latex','fontsize',13)
+plot(r_R, results.Vax_over_Vinf{V_inf_ix1},'o-','Color',C(1,:),'LineWidth', 2)
+plot(r_R, results.Vax_over_Vinf{V_inf_ix2},'o-','Color',C(2,:),'LineWidth', 2)
+plot(r_R, results.Vax_over_Vinf{V_inf_ix3},'o-','Color',C(3,:),'LineWidth', 2)
+plot(r_R, results.Vax_over_Vinf{V_inf_ix4},'o-','Color',C(4,:),'LineWidth', 2)
+xlabel('$r/R$ [-]','interpreter','latex','fontsize',13)
+ylabel('$V_{ax}/V_{\infty}$ [-]','interpreter','latex','fontsize',13)
 legend("$V_\infty = "+V_inf_selected(1)+" m/s$, $J = " + round(J_selected(1),2) + "$",...
        "$V_\infty = "+V_inf_selected(2)+" m/s$, $J = " + round(J_selected(2),2) + "$",...
        "$V_\infty = "+V_inf_selected(3)+" m/s$, $J = " + round(J_selected(3),2) + "$",...
+       "$V_\infty = "+V_inf_selected(4)+" m/s$, $J = " + round(J_selected(4),2) + "$",...
        'interpreter','latex','fontsize',12,'location','NorthWest')
 
 f2 = figure(2);
-hold on; grid on; box on;
+hold on; grid minor; box on;
 f2.Position = [200 200 1050 450];
-plot(r_R, results.thrust_list{V_inf_ix1},'s-','Color',C(1,:),'LineWidth',2)
-plot(r_R, results.thrust_list{V_inf_ix2},'s-','Color',C(2,:),'LineWidth',2)
-plot(r_R, results.thrust_list{V_inf_ix3},'s-','Color',C(3,:),'LineWidth',2)
-xlabel('$r/R$','interpreter','latex','fontsize',13)
+plot(r_R, results.thrust_list{V_inf_ix1},'o-','Color',C(1,:),'LineWidth',2)
+plot(r_R, results.thrust_list{V_inf_ix2},'o-','Color',C(2,:),'LineWidth',2)
+plot(r_R, results.thrust_list{V_inf_ix3},'o-','Color',C(3,:),'LineWidth',2)
+plot(r_R, results.thrust_list{V_inf_ix4},'o-','Color',C(4,:),'LineWidth',2)
+
+xlabel('$r/R$ [-]','interpreter','latex','fontsize',13)
 ylabel('$T\;[N]$','interpreter','latex','fontsize',13)
 legend("$V_\infty = "+V_inf_selected(1)+" m/s$, $J = " + round(J_selected(1),2) + "$",...
        "$V_\infty = "+V_inf_selected(2)+" m/s$, $J = " + round(J_selected(2),2) + "$",...
        "$V_\infty = "+V_inf_selected(3)+" m/s$, $J = " + round(J_selected(3),2) + "$",...
+       "$V_\infty = "+V_inf_selected(4)+" m/s$, $J = " + round(J_selected(4),2) + "$",...
        'interpreter','latex','fontsize',12,'location','NorthWest')
    
-   
+saveas(f1,"C:\Users\ljvdo\Documents\GitHub\Aircraft_Aerodynamics\aircraft_aerodynamics_5\FigurenJasper\r_R_vs_v_V.png")
+saveas(f2,"C:\Users\ljvdo\Documents\GitHub\Aircraft_Aerodynamics\aircraft_aerodynamics_5\FigurenJasper\r_R_vs_T.png")   
    
    
    

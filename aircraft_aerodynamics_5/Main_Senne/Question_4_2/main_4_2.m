@@ -210,48 +210,49 @@ f_eta_45 = fit(eta_j.deg_45(1,:)',eta_j.deg_45(2,:)','smoothingspline');
 
 %% Plotting Section
 close all
-
-C = linspecer(5);
+ 
+C = [108/256, 194/256, 74/256;237/256, 104/256, 66/256; 0, 166/256, 214/256; 224/256, 60/256, 49/256];
 
 %%%=============================== CT ==================================%%%
 
 f1 = figure(1);
 f1.Position = [200 200 1050 450];
-hold on; box on; grid on;
+hold on; box on; grid minor;
+h=plot(f_Ct_25,'--',Ct_j.deg_25(1,:)',Ct_j.deg_25(2,:)');
+set(h,'color',C(1,:));
+h(1).Color=C(1,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
+h=plot(f_Ct_35,'--',Ct_j.deg_35(1,:)',Ct_j.deg_35(2,:)')';
+set(h,'color',C(2,:));
+h(1).Color=C(2,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
+h=plot(f_Ct_45,'--',Ct_j.deg_45(1,:)',Ct_j.deg_45(2,:)');
+set(h,'color',C(3,:));
+h(1).Color=C(3,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
 
 plot(J_25,CT_25,'-','color',C(1,:),'LineWidth',2.5)
 plot(J_35,CT_35,'-','color',C(2,:),'LineWidth',2.5)
 plot(J_45,CT_45,'-','color',C(3,:),'LineWidth',2.5)
 
-h=plot(f_Ct_25,'--',Ct_j.deg_25(1,:)',Ct_j.deg_25(2,:)');
-set(h,'color',C(1,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
-h=plot(f_Ct_35,'--',Ct_j.deg_35(1,:)',Ct_j.deg_35(2,:)')';
-set(h,'color',C(2,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
-h=plot(f_Ct_45,'--',Ct_j.deg_45(1,:)',Ct_j.deg_45(2,:)');
-set(h,'color',C(3,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
+
 
 ylim([-0.05 0.3])
 % title('Thrust Coefficients $C_T$', 'Interpreter', 'Latex')
-xlabel('Advance Ratio $J$', 'Interpreter','Latex');
-ylabel('$C_T$', 'Interpreter', 'latex');
-legend('$\beta = 25 ^{\circ}$, BEM', ...
-       '$\beta = 35 ^{\circ}$, BEM', ...
-       '$\beta = 45 ^{\circ}$, BEM', ...
-       '$\beta = 25 ^{\circ}$, Experimental Data', ...
+xlabel('Advance Ratio $J$ [-]', 'Interpreter','Latex');
+ylabel('$C_T$ [-]', 'Interpreter', 'latex');
+legend('$\beta = 25 ^{\circ}$, Experimental Data', ...
        '$\beta = 25 ^{\circ}$, Fitted Data', ...
        '$\beta = 35 ^{\circ}$, Experimental Data', ...
        '$\beta = 35 ^{\circ}$, Fitted Data', ...
        '$\beta = 45 ^{\circ}$, Experimental Data', ...
        '$\beta = 45 ^{\circ}$, Fitted Data', ...
+       '$\beta = 25 ^{\circ}$, Blade Element Method', ...
+       '$\beta = 35 ^{\circ}$, Blade Element Method', ...
+       '$\beta = 45 ^{\circ}$, Blade Element method', ...
        'Interpreter','latex', 'Location','NorthEast');
 hold off
 
@@ -259,41 +260,39 @@ hold off
 
 f2 = figure(2);
 f2.Position = [300 300 1050 450];
-hold on; box on; grid on;
+hold on; box on; grid minor;
+h=plot(f_Cp_25,'--',Cp_j.deg_25(1,:)',Cp_j.deg_25(2,:)');
+set(h,'color',C(1,:));
+h(1).Color=C(1,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
+h=plot(f_Cp_35,'--',Cp_j.deg_35(1,:)',Cp_j.deg_35(2,:)');
+set(h,'color',C(2,:));
+h(1).Color=C(2,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
+h=plot(f_Cp_45,'--',Cp_j.deg_45(1,:)',Cp_j.deg_45(2,:)');
+set(h,'color',C(3,:));
+h(1).Color=C(3,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
 
 plot(J_25,CP_25,'-','color',C(1,:),'LineWidth',2.5)
 plot(J_35,CP_35,'-','color',C(2,:),'LineWidth',2.5)
 plot(J_45,CP_45,'-','color',C(3,:),'LineWidth',2.5)
 
-
-h=plot(f_Cp_25,'--',Cp_j.deg_25(1,:)',Cp_j.deg_25(2,:)');
-set(h,'color',C(1,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
-h=plot(f_Cp_35,'--',Cp_j.deg_35(1,:)',Cp_j.deg_35(2,:)');
-set(h,'color',C(2,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
-h=plot(f_Cp_45,'--',Cp_j.deg_45(1,:)',Cp_j.deg_45(2,:)');
-set(h,'color',C(3,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
-
 % title('Torque Coefficients $C_P$', 'Interpreter', 'latex')
-xlabel('Advance Ratio $J$', 'Interpreter', 'latex');
-ylabel('$C_P$', 'Interpreter', 'latex');
-legend('$\beta = 25 ^{\circ}$, BEM', ...
-       '$\beta = 35 ^{\circ}$, BEM', ...
-       '$\beta = 45 ^{\circ}$, BEM', ...
-       '$\beta = 25 ^{\circ}$, Experimental Data', ...
+xlabel('Advance Ratio $J$ [-]', 'Interpreter', 'latex');
+ylabel('$C_P$ [-]', 'Interpreter', 'latex');
+legend('$\beta = 25 ^{\circ}$, Experimental Data', ...
        '$\beta = 25 ^{\circ}$, Fitted Data', ...
        '$\beta = 35 ^{\circ}$, Experimental Data', ...
        '$\beta = 35 ^{\circ}$, Fitted Data', ...
        '$\beta = 45 ^{\circ}$, Experimental Data', ...
        '$\beta = 45 ^{\circ}$, Fitted Data', ...
+       '$\beta = 25 ^{\circ}$, Blade Element Method', ...
+       '$\beta = 35 ^{\circ}$, Blade Element Method', ...
+       '$\beta = 45 ^{\circ}$, Blade Element Method', ...
        'Interpreter','latex', 'Location','NorthEast');
 hold off
 
@@ -301,27 +300,28 @@ hold off
 
 f3 = figure(3);
 f3.Position = [400 400 1050 450];
-hold on; box on; grid on;
+hold on; box on; grid minor;
+h=plot(f_eta_25,'--',eta_j.deg_25(1,:)',eta_j.deg_25(2,:)');
+set(h,'color',C(1,:));
+h(1).Color=C(1,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
+h=plot(f_eta_35,'--',eta_j.deg_35(1,:)',eta_j.deg_35(2,:)');
+set(h,'color',C(2,:));
+h(1).Color=C(2,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
+h=plot(f_eta_45,'--',eta_j.deg_45(1,:)',eta_j.deg_45(2,:)');
+set(h,'color',C(3,:));
+h(1).Color=C(3,:);
+h(1).MarkerSize=10;
+h(2).LineWidth=1.75;
 
 plot(J_25,eff_25,'-','color',C(1,:),'LineWidth',2.5);
 plot(J_35,eff_35,'-','color',C(2,:),'LineWidth',2.5);
 plot(J_45,eff_45,'-','color',C(3,:),'LineWidth',2.5);
 
-h=plot(f_eta_25,'--',eta_j.deg_25(1,:)',eta_j.deg_25(2,:)');
-set(h,'color',C(1,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
-h=plot(f_eta_35,'--',eta_j.deg_35(1,:)',eta_j.deg_35(2,:)');
-set(h,'color',C(2,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
-h=plot(f_eta_45,'--',eta_j.deg_45(1,:)',eta_j.deg_45(2,:)');
-set(h,'color',C(3,:));
-h(1).Color=[0 0 0];
-h(1).MarkerSize=15;
-h(2).LineWidth=1.75;
+
 
 
 xlim([0 3]); ylim([0.5 0.9])
@@ -329,24 +329,24 @@ xlim([0 3]); ylim([0.5 0.9])
 
 
 % title('Propeller Efficiency $\eta$', 'Interpreter', 'latex');
-xlabel('Advance Ratio $J$', 'Interpreter', 'latex');
-ylabel('$\eta$', 'Interpreter', 'latex');
+xlabel('Advance Ratio $J$ [-]', 'Interpreter', 'latex');
+ylabel('$\eta$ [-]', 'Interpreter', 'latex');
 
 
-legend('$\beta = 25 ^{\circ}$, BEM', ...
-       '$\beta = 35 ^{\circ}$, BEM', ...
-       '$\beta = 45 ^{\circ}$, BEM', ...
-       '$\beta = 25 ^{\circ}$, Experimental Data', ...
+legend('$\beta = 25 ^{\circ}$, Experimental Data', ...
        '$\beta = 25 ^{\circ}$, Fitted Data', ...
        '$\beta = 35 ^{\circ}$, Experimental Data', ...
        '$\beta = 35 ^{\circ}$, Fitted Data', ...
        '$\beta = 45 ^{\circ}$, Experimental Data', ...
        '$\beta = 45 ^{\circ}$, Fitted Data', ...
+       '$\beta = 25 ^{\circ}$, Blade Element Method', ...
+       '$\beta = 35 ^{\circ}$, Blade Element Method', ...
+       '$\beta = 45 ^{\circ}$, Blade Element Method', ...
        'Interpreter','latex', 'Location','best');
    
-   
-   
-   
-   
+saveas(f1,"C:\Users\ljvdo\Documents\GitHub\Aircraft_Aerodynamics\aircraft_aerodynamics_5\FigurenJasper\J_vs_C_T.png")
+saveas(f2,"C:\Users\ljvdo\Documents\GitHub\Aircraft_Aerodynamics\aircraft_aerodynamics_5\FigurenJasper\J_vs_C_P.png")
+saveas(f3,"C:\Users\ljvdo\Documents\GitHub\Aircraft_Aerodynamics\aircraft_aerodynamics_5\FigurenJasper\J_vs_eta.png")
+
    
    

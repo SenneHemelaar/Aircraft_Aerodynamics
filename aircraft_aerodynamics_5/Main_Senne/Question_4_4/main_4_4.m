@@ -7,7 +7,7 @@ list1 = {'Varying Rotor Diameter (D)',...
 
 list2 = {'Constant CT',...
          'Constant CP'};
-[indx2,tf2] = listdlg('ListString',list2);
+[indx2,tf2 ] = listdlg('ListString',list2);
 
 %% Settings Prandtl tip and root correction
 PrandtlCorrection_deg_25 = 0;
@@ -58,9 +58,9 @@ chord, pitch] = Import_Data(D);
 V_inf_list = linspace(15,40,501);
 
 if indx2 == 1
-    CT_aim = 0.15;
+    T_aim = 1200;
 elseif indx2 == 2
-    CP_aim = 0.2;
+    P_aim = 40000;
 end
 
 for j = 1:length(V_inf_list)
@@ -72,12 +72,13 @@ for j = 1:length(V_inf_list)
      tipR, rootR, pitch.deg_35, omega, N, n, r_steps, rho, ...
      Cl_a, Cl_a_sec_fn, Cd_a, Cd_a_sec_fn, chord, ...
      PrandtlCorrection_deg_35, DiagnosticInfo);
-    
+    % fprintf("%5.2f \n",thrust)
+    % fprintf("%5.2f \n",power)
     CT = thrust/(rho*n^2*D^4);
     CP = power/(rho*n^3*D^5);
     
     if indx2 == 1
-        if CT > CT_aim-0.001 && CT < CT_aim+0.001
+        if thrust > T_aim*0.99 && thrust < T_aim*1.01
             % Post Processing
             results.D(k)              = D;
             results.N(k)              = N;
@@ -103,7 +104,7 @@ for j = 1:length(V_inf_list)
     
     elseif indx2 == 2
     
-        if CP > CP_aim-0.001 && CP < CP_aim+0.001
+        if power > P_aim*0.99 && power < P_aim*1.01
             % Post Processing
             results.D(k)              = D;
             results.N(k)              = N;
@@ -136,15 +137,15 @@ end
 
 if indx2 == 1
     if indx1 == 1
-        save("results_D_CT_"+CT_aim+".mat", 'results')
+        save("results_D_T_"+T_aim+".mat", 'results')
     elseif indx1 == 2
-        save("results_N_CT_"+CT_aim+".mat", 'results')
+        save("results_N_T_"+T_aim+".mat", 'results')
     end
 elseif indx2 == 2
     if indx1 == 1
-        save("results_D_CP_"+CP_aim+".mat", 'results')
+        save("results_D_P_"+P_aim+".mat", 'results')
     elseif indx1 == 2
-        save("results_N_CP_"+CP_aim+".mat", 'results')
+        save("results_N_P_"+P_aim+".mat", 'results')
     end
 end
    
